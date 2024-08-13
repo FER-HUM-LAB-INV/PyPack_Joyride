@@ -1,8 +1,8 @@
 from random import randint
-from time import sleep
 import os
 from pygame import *
 
+mixer.init()
 init()
 
 clock = time.Clock()
@@ -14,9 +14,10 @@ screen_height = 768
 screen = display.set_mode((screen_width, screen_height))
 display.set_caption("PyPack Joyride")
 
-Game = True
+warning = mixer.Sound("snd/Warning.mp3")
+launch = mixer.Sound("snd/Launch.mp3")
 
-global i
+Game = True
 
 
 class GameSprite(sprite.Sprite):
@@ -103,7 +104,12 @@ class Barry(GameSprite):
                 self.kind = "fall"
 
 
-class Rocket(GameSprite):
+class Missile(GameSprite):
+
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+        self.f = None
+        self.wait = None
 
     def animate(self):
 
@@ -123,7 +129,7 @@ class Rocket(GameSprite):
     def warning(self):
         if not self.launched:
             self.pos = randint(20, 714)
-            self.image = transform.scale(image.load("img/Missile_Target.png"), (76, 67))
+            warning.play()
         self.launch()
 
     def launch(self):
@@ -132,22 +138,34 @@ class Rocket(GameSprite):
             self.i = 0
             self.rect.x = 1024
             self.launched = True
+            self.wait = 0
+            warning.play()
+            self.f = 0
 
-        if self.i != 75:
-            self.rect.x -= self.speed
-            self.i += 1
+        if self.wait == 35:
+            if self.i != 75:
+                self.rect.x -= self.speed
+                self.i += 1
+            else:
+                self.i = 0
+                self.wait = 0
+                self.launched = False
+
+            if self.f != 1:
+                launch.play()
+                self.f = 1
+
+            self.rect.y = self.pos
+            self.animate()
         else:
-            self.i = 0
-
-        self.rect.y = self.pos
-        self.animate()
+            self.wait += 1
 
 
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
-rocket = Rocket("img/Missile_Target.png", 0, 0, 25, 93, 34, None, None, False, 0)
+missile = Missile("img/Missile_Target.png", 0, 0, 25, 93, 34, None, None, False, 0)
 
 stage = "menu"
 while Game:
@@ -157,7 +175,6 @@ while Game:
         elif stage == "menu":
             if e.type == MOUSEBUTTONDOWN:
                 if e.button == 1:
-                    print("a")
                     stage = "run"
 
     if stage == "run":
@@ -167,8 +184,8 @@ while Game:
         barry.animation()
         barry.move()
         barry.reset()
-        rocket.warning()
-        rocket.reset()
+        missile.warning()
+        missile.reset()
 
         keys = key.get_pressed()
         if keys[K_SPACE] and sprite.collide_rect(barry, floor):
@@ -182,5 +199,11 @@ while Game:
                 barry.kind = "run"
             elif not sprite.collide_rect(barry, floor):
                 barry.kind = "fall"
+        elif sprite.collide_rect(barry, missile):
+            stage = "lost"
+
+    elif stage == "lost":
+        screen.fill((100, 0, 0))
+
     clock.tick(fps)
     display.update()
