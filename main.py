@@ -1,3 +1,4 @@
+from random import randint
 from time import sleep
 import os
 from pygame import *
@@ -15,16 +16,11 @@ display.set_caption("PyPack Joyride")
 
 Game = True
 
-
-Sheet = image.load("img/BarryFullSpriteSheet.png")
-Walk1 = image.load("img/Walk1.png")
-Walk2 = image.load("img/Walk2.png")
-Walk3 = image.load("img/Walk3.png")
-Walk4 = image.load("img/Walk4.png")
+global i
 
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, filename, x, y, speed, w, h, kind):
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
         super().__init__()
         self.speed = speed
         self.image = transform.scale(image.load(filename), (w, h))
@@ -36,6 +32,9 @@ class GameSprite(sprite.Sprite):
         self.counter = 0
         self.fall = 0
         self.kind = kind
+        self.pos = pos
+        self.launched = launched
+        self.i = i
 
     def reset(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -73,8 +72,8 @@ class Barry(GameSprite):
             elif 35 <= self.counter < 40:
                 self.image = transform.scale(image.load('img/Fly3.png'), (self.w, self.h))
 
-        elif self.kind == "fly":
-            self.image = transform.scale(image.load('img/FlyFall.png'), (self.w, self.h))
+        elif self.kind == "fall":
+            self.image = transform.scale(image.load('img/Walk1.png'), (self.w, self.h))
 
         if self.counter > 40:
             self.counter = 0
@@ -107,7 +106,7 @@ class Barry(GameSprite):
 class Rocket(GameSprite):
 
     def animate(self):
-        print(self.counter)
+
         if 0 <= self.counter < 5:
             self.image = transform.scale(image.load('img/Rocket1.png'), (self.w, self.h))
         elif 5 <= self.counter < 10:
@@ -121,17 +120,34 @@ class Rocket(GameSprite):
         if self.counter >= 20:
             self.counter = 0
 
+    def warning(self):
+        if not self.launched:
+            self.pos = randint(20, 714)
+            self.image = transform.scale(image.load("img/Missile_Target.png"), (76, 67))
+        self.launch()
+
     def launch(self):
-        self.rect.x = 500
-        self.rect.y = 450
+
+        if not self.launched:
+            self.i = 0
+            self.rect.x = 1024
+            self.launched = True
+
+        if self.i != 75:
+            self.rect.x -= self.speed
+            self.i += 1
+        else:
+            self.i = 0
+
+        self.rect.y = self.pos
         self.animate()
 
 
-barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run")
+barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
-floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None)
-roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None)
-rocket = Rocket("img/Rocket1.png", 0, 0, 20, 93, 34, None)
+floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
+roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
+rocket = Rocket("img/Missile_Target.png", 0, 0, 25, 93, 34, None, None, False, 0)
 
 stage = "menu"
 while Game:
@@ -151,8 +167,8 @@ while Game:
         barry.animation()
         barry.move()
         barry.reset()
+        rocket.warning()
         rocket.reset()
-        rocket.launch()
 
         keys = key.get_pressed()
         if keys[K_SPACE] and sprite.collide_rect(barry, floor):
