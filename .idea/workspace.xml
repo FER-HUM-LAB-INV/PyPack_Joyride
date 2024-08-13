@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="Updated PyPack_Joyride&#10;Added Sound and Missiles.&#10;Added Temp lost screen.">
+    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme.">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -157,13 +158,46 @@
       <option name="project" value="LOCAL" />
       <updated>1723565643196</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Updated PyPack_Joyride&#10;Added Sound and Missiles.&#10;Added Temp lost screen.">
+      <option name="closed" value="true" />
+      <created>1723580047365</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1723580047365</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme.">
+      <option name="closed" value="true" />
+      <created>1723580989728</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1723580989728</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme.">
+      <option name="closed" value="true" />
+      <created>1723581015534</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1723581015534</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme.">
+      <option name="closed" value="true" />
+      <created>1723581372949</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1723581372949</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created PyPack_Joyride" />
     <MESSAGE value="Updated PyPack_Joyride" />
     <MESSAGE value="Updated PyPack_Joyride&#10;Added Sound and Missiles.&#10;Added Temp lost screen." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated PyPack_Joyride&#10;Added Sound and Missiles.&#10;Added Temp lost screen." />
+    <MESSAGE value="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated PyPack_Joyride.&#10;Added Sound and Missiles.&#10;Added Temp lost screen.&#10;Added Temp hitbox.&#10;Added main theme." />
   </component>
 </project>
