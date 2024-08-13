@@ -2,8 +2,9 @@ from random import randint
 import os
 from pygame import *
 
-mixer.init()
 init()
+mixer.init()
+font.init()
 
 clock = time.Clock()
 fps = 60
@@ -16,6 +17,8 @@ display.set_caption("PyPack Joyride")
 
 warning = mixer.Sound("snd/Warning.mp3")
 launch = mixer.Sound("snd/Launch.mp3")
+MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
+lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 
 Game = True
 
@@ -165,7 +168,7 @@ barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
-missile = Missile("img/Missile_Target.png", 0, 0, 25, 93, 34, None, None, False, 0)
+missile = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
 
 stage = "menu"
 while Game:
@@ -204,6 +207,7 @@ while Game:
 
     elif stage == "lost":
         screen.fill((100, 0, 0))
+        screen.blit(lost,(400 - lost.get_width() // 2, 150 - lost.get_height() // 2))
 
     clock.tick(fps)
     display.update()
