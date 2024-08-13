@@ -17,10 +17,12 @@ display.set_caption("PyPack Joyride")
 
 warning = mixer.Sound("snd/Warning.mp3")
 launch = mixer.Sound("snd/Launch.mp3")
+theme = mixer.Sound("snd/Theme.mp3")
 MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
 lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 
 Game = True
+m = 0
 
 
 class GameSprite(sprite.Sprite):
@@ -42,6 +44,8 @@ class GameSprite(sprite.Sprite):
 
     def reset(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
+        color = (255, 0, 0)
+        draw.rect(screen, color, Rect(self.rect.x, self.rect.y, self.rect.w, self.rect.h), 2)
 
 
 class Barry(GameSprite):
@@ -142,7 +146,6 @@ class Missile(GameSprite):
             self.rect.x = 1024
             self.launched = True
             self.wait = 0
-            warning.play()
             self.f = 0
 
         if self.wait == 35:
@@ -181,6 +184,9 @@ while Game:
                     stage = "run"
 
     if stage == "run":
+        if m == 0:
+            theme.play()
+            m = 1
         screen.fill((100, 100, 100))
         floor.reset()
         roof.reset()
@@ -202,7 +208,7 @@ while Game:
                 barry.kind = "run"
             elif not sprite.collide_rect(barry, floor):
                 barry.kind = "fall"
-        elif sprite.collide_rect(barry, missile):
+        if sprite.collide_rect(barry, missile):
             stage = "lost"
 
     elif stage == "lost":
