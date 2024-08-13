@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/PyPack_Joyride.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="Created PyPack_Joyride" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,6 +69,19 @@
       <option name="presentableId" value="Default" />
       <updated>1723468701364</updated>
     </task>
+    <task id="LOCAL-00001" summary="Created PyPack_Joyride">
+      <option name="closed" value="true" />
+      <created>1723541002522</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723541002522</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Created PyPack_Joyride" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created PyPack_Joyride" />
   </component>
 </project>
