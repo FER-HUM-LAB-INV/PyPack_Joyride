@@ -90,8 +90,6 @@ class Barry(GameSprite):
                 self.fall = 10
             if sprite.collide_rect(self, floor):
                 self.fall = 4
-            elif sprite.collide_rect(self, roof):
-                self.fall = 0
         if not keys[K_SPACE]:
             print(self.fall)
             self.fall -= 0.5
@@ -106,7 +104,7 @@ class Barry(GameSprite):
                 self.kind = "fall"
 
 
-barry = Barry("img/Walk1.png", 20, 0, 10, 64, 74, "run")
+barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run")
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None)
@@ -125,9 +123,23 @@ while Game:
 
     if stage == "run":
         floor.reset()
+        roof.reset()
         barry.animation()
         barry.move()
         barry.reset()
+
+        keys = key.get_pressed()
+        if keys[K_SPACE] and sprite.collide_rect(barry, floor):
+            barry.fall = 4
+        elif sprite.collide_rect(barry, roof):
+            barry.fall = 0
+        elif not keys[K_SPACE]:
+            if sprite.collide_rect(barry, floor):
+                barry.fall = 0
+                barry.rect.y = 675
+                barry.kind = "run"
+            elif not sprite.collide_rect(barry, floor):
+                barry.kind = "fall"
 
     clock.tick(fps)
     display.update()
