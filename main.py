@@ -115,6 +115,7 @@ class Missile(GameSprite):
 
     def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
         super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+        self.l = None
         self.f = None
         self.wait = None
 
@@ -137,6 +138,7 @@ class Missile(GameSprite):
         if not self.launched:
             self.pos = randint(20, 714)
             warning.play()
+            self.l = 0
         self.launch()
 
     def launch(self):
@@ -156,6 +158,7 @@ class Missile(GameSprite):
                 self.i = 0
                 self.wait = 0
                 self.launched = False
+                self.l = 1
 
             if self.f != 1:
                 launch.play()
@@ -171,6 +174,7 @@ class Missile_Tracer(GameSprite):
 
     def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
         super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+        self.l = None
         self.f = None
         self.wait = None
 
@@ -193,6 +197,7 @@ class Missile_Tracer(GameSprite):
         if not self.launched:
             self.rect.y = barry.rect.y
             warning.play()
+            self.l = 0
         self.launch()
 
     def launch(self):
@@ -212,6 +217,7 @@ class Missile_Tracer(GameSprite):
                 self.i = 0
                 self.wait = 0
                 self.launched = False
+                self.l = 1
 
             if self.f != 1:
                 launch.play()
@@ -220,6 +226,23 @@ class Missile_Tracer(GameSprite):
             self.animate()
         else:
             self.wait += 1
+
+
+def reset(x, y):
+
+    barry.rect.x = x
+    barry.rect.y = y
+    barry.fall = 0
+    barry.kind = "run"
+
+    for missile in missiles:
+        missile.l = 1
+        missile.launched = False
+        missile.f = 1
+        missile.i = 0
+        missile.wait = 0
+        missile.rect.x = 1024
+        missile.rect.y = 0
 
 
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
@@ -238,10 +261,11 @@ while Game:
     for e in event.get():
         if e.type == QUIT:
             exit()
-        elif stage == "menu":
+        elif stage == "menu" or stage == "lost":
             if e.type == MOUSEBUTTONDOWN:
                 if e.button == 1:
                     stage = "run"
+                    reset(20, 675)
 
     if stage == "run":
         if m == 0:
@@ -253,12 +277,19 @@ while Game:
         barry.animation()
         barry.move()
         barry.reset()
-
-        for missile in missiles:
-            missile.warning()
-            missile.reset()
-            if sprite.collide_rect(barry, missile):
-                stage = "lost"
+        lnch = randint(1, 50)
+        if missile.l == 0:
+            for missile in missiles:
+                missile.warning()
+                missile.reset()
+                if sprite.collide_rect(barry, missile):
+                    stage = "lost"
+        elif lnch == 30:
+            for missile in missiles:
+                missile.warning()
+                missile.reset()
+                if sprite.collide_rect(barry, missile):
+                    stage = "lost"
 
         keys = key.get_pressed()
         if keys[K_SPACE] and sprite.collide_rect(barry, floor):
