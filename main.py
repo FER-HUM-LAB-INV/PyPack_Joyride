@@ -23,38 +23,8 @@ Walk3 = image.load("img/Walk3.png")
 Walk4 = image.load("img/Walk4.png")
 
 
-class Button:
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.clicked = False
-
-    def draw(self):
-        action = False
-
-        pos = mouse.get_pos()
-
-        if self.rect.collidepoint(pos):
-            if mouse.get_pressed()[0] == 1 and not self.clicked:
-                action = True
-                self.clicked = True
-
-        if mouse.get_pressed()[0] == 0:
-            self.clicked = False
-
-        # button
-        screen.blit(self.image, self.rect)
-
-        return action
-
-    def reset(self):
-        screen.blit(self.image, (self.x, self.y))
-
-
 class GameSprite(sprite.Sprite):
-    def __init__(self, filename, x, y, speed, w, h):
+    def __init__(self, filename, x, y, speed, w, h, kind):
         super().__init__()
         self.speed = speed
         self.image = transform.scale(image.load(filename), (w, h))
@@ -65,22 +35,46 @@ class GameSprite(sprite.Sprite):
         self.h = h
         self.counter = 0
         self.fall = 0
+        self.kind = kind
 
     def reset(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 class Barry(GameSprite):
+
     def animation(self):
         self.counter += 1
-        if 0 <= self.counter < 10:
-            self.image = transform.scale(image.load('img/Walk1.png'), (self.w, self.h))
-        elif 10 <= self.counter < 20:
-            self.image = transform.scale(image.load('img/Walk2.png'), (self.w, self.h))
-        elif 20 <= self.counter < 30:
-            self.image = transform.scale(image.load('img/Walk3.png'), (self.w, self.h))
-        elif 30 <= self.counter < 40:
-            self.image = transform.scale(image.load('img/Walk4.png'), (self.w, self.h))
+        if self.kind == "run":
+            if 0 <= self.counter < 10:
+                self.image = transform.scale(image.load('img/Walk1.png'), (self.w, self.h))
+            elif 10 <= self.counter < 20:
+                self.image = transform.scale(image.load('img/Walk2.png'), (self.w, self.h))
+            elif 20 <= self.counter < 30:
+                self.image = transform.scale(image.load('img/Walk3.png'), (self.w, self.h))
+            elif 30 <= self.counter < 40:
+                self.image = transform.scale(image.load('img/Walk4.png'), (self.w, self.h))
+
+        elif self.kind == "fly":
+            if 0 <= self.counter < 5:
+                self.image = transform.scale(image.load('img/Fly1.png'), (self.w, self.h))
+            elif 5 <= self.counter < 10:
+                self.image = transform.scale(image.load('img/Fly2.png'), (self.w, self.h))
+            elif 10 <= self.counter < 15:
+                self.image = transform.scale(image.load('img/Fly3.png'), (self.w, self.h))
+            elif 15 <= self.counter < 20:
+                self.image = transform.scale(image.load('img/Fly1.png'), (self.w, self.h))
+            elif 20 <= self.counter < 25:
+                self.image = transform.scale(image.load('img/Fly2.png'), (self.w, self.h))
+            elif 25 <= self.counter < 30:
+                self.image = transform.scale(image.load('img/Fly3.png'), (self.w, self.h))
+            elif 30 <= self.counter < 35:
+                self.image = transform.scale(image.load('img/Fly2.png'), (self.w, self.h))
+            elif 35 <= self.counter < 40:
+                self.image = transform.scale(image.load('img/Fly3.png'), (self.w, self.h))
+
+        elif self.kind == "fly":
+            self.image = transform.scale(image.load('img/FlyFall.png'), (self.w, self.h))
 
         if self.counter > 40:
             self.counter = 0
@@ -88,35 +82,52 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
-            self.rect.y -= self.speed
-            self.fall = self.speed
-        if not keys[K_SPACE]:
+            self.kind = "fly"
+            print(self.fall)
+            self.rect.y -= self.fall
             self.fall += 0.5
-            self.rect.y += self.fall
             if self.fall >= 10:
                 self.fall = 10
-            elif sprite.spritecollide(self, floor, False):
-                self.fall = -0.25
+            if sprite.collide_rect(self, floor):
+                self.fall = 4
+            elif sprite.collide_rect(self, roof):
+                self.fall = 0
+        if not keys[K_SPACE]:
+            print(self.fall)
+            self.fall -= 0.5
+            self.rect.y -= self.fall
+            if self.fall >= 10:
+                self.fall = 10
+            elif sprite.collide_rect(self, floor):
+                self.fall = 0
+                self.rect.y = 675
+                self.kind = "run"
+            elif not sprite.collide_rect(self, floor):
+                self.kind = "fall"
 
 
-barry = Barry("img/Walk1.png", 20, 664, 10, 64, 74)
+barry = Barry("img/Walk1.png", 20, 0, 10, 64, 74, "run")
 
-floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 10, 10)
+floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None)
+roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None)
 
 
+stage = "menu"
 while Game:
     for e in event.get():
         if e.type == QUIT:
             exit()
+        elif stage == "menu":
+            if e.type == MOUSEBUTTONDOWN:
+                if e.button == 1:
+                    print("a")
+                    stage = "run"
 
-    k = key.get_pressed()
-    if k == K_TAB:
-        barry -= 5
+    if stage == "run":
+        floor.reset()
+        barry.animation()
+        barry.move()
+        barry.reset()
 
-    floor.reset()
-    screen.fill((100, 100, 100))
-    barry.animation()
-    barry.move()
-    barry.reset()
     clock.tick(fps)
     display.update()
