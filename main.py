@@ -104,11 +104,34 @@ class Barry(GameSprite):
                 self.kind = "fall"
 
 
+class Rocket(GameSprite):
+
+    def animate(self):
+        print(self.counter)
+        if 0 <= self.counter < 5:
+            self.image = transform.scale(image.load('img/Rocket1.png'), (self.w, self.h))
+        elif 5 <= self.counter < 10:
+            self.image = transform.scale(image.load('img/Rocket2.png'), (self.w, self.h))
+        elif 10 <= self.counter < 15:
+            self.image = transform.scale(image.load('img/Rocket3.png'), (self.w, self.h))
+        elif 15 <= self.counter < 20:
+            self.image = transform.scale(image.load('img/Rocket4.png'), (self.w, self.h))
+
+        self.counter += 1
+        if self.counter >= 20:
+            self.counter = 0
+
+    def launch(self):
+        self.rect.x = 500
+        self.rect.y = 450
+        self.animate()
+
+
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run")
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None)
-
+rocket = Rocket("img/Rocket1.png", 0, 0, 20, 93, 34, None)
 
 stage = "menu"
 while Game:
@@ -122,11 +145,14 @@ while Game:
                     stage = "run"
 
     if stage == "run":
+        screen.fill((100, 100, 100))
         floor.reset()
         roof.reset()
         barry.animation()
         barry.move()
         barry.reset()
+        rocket.reset()
+        rocket.launch()
 
         keys = key.get_pressed()
         if keys[K_SPACE] and sprite.collide_rect(barry, floor):
@@ -140,6 +166,5 @@ while Game:
                 barry.kind = "run"
             elif not sprite.collide_rect(barry, floor):
                 barry.kind = "fall"
-
     clock.tick(fps)
     display.update()
