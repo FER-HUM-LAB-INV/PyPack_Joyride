@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="Created PyPack_Joyride">
+    <list default="true" id="fbdf0043-f787-4c18-8552-50bc8119119d" name="Changes" comment="Updated PyPack_Joyride">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,11 +101,20 @@
       <option name="project" value="LOCAL" />
       <updated>1723547738122</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updated PyPack_Joyride">
+      <option name="closed" value="true" />
+      <created>1723556494414</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1723556494414</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Created PyPack_Joyride" />
-    <option name="LAST_COMMIT_MESSAGE" value="Created PyPack_Joyride" />
+    <MESSAGE value="Updated PyPack_Joyride" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated PyPack_Joyride" />
   </component>
 </project>
