@@ -89,26 +89,44 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
+            bullet0 = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45, None, None, None, None)
+            bullets.append(bullet0)
+
+            for bullet in bullets:
+                bullet.shoot()
+
             self.kind = "fly"
             print(self.fall)
             self.rect.y -= self.fall
             self.fall += 0.5
-            if self.fall >= 10:
-                self.fall = 10
             if sprite.collide_rect(self, floor):
                 self.fall = 4
+
+        if self.fall >= 10:
+            self.fall = 10
+
+        if sprite.collide_rect(barry, roof):
+            barry.fall = 0
+
         if not keys[K_SPACE]:
             print(self.fall)
             self.fall -= 0.5
             self.rect.y -= self.fall
-            if self.fall >= 10:
-                self.fall = 10
-            elif sprite.collide_rect(self, floor):
+            if sprite.collide_rect(self, floor):
                 self.fall = 0
                 self.rect.y = 675
                 self.kind = "run"
             elif not sprite.collide_rect(self, floor):
                 self.kind = "fall"
+
+
+class BG(GameSprite):
+
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+
+    def go(self):
+        self.rect.x -= 10
 
 
 class Missile(GameSprite):
@@ -228,8 +246,14 @@ class Missile_Tracer(GameSprite):
             self.wait += 1
 
 
-def reset(x, y):
+class Bullets(GameSprite):
 
+    def shoot(self):
+        j = randint(-15, 10)
+        self.rect.x = barry.rect.x + 23.5 + j
+
+
+def reset(x, y):
     barry.rect.x = x
     barry.rect.y = y
     barry.fall = 0
@@ -254,7 +278,16 @@ missile2 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False
 missile3 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
 missile4 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
 
+bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000, None, None, None, None)
+bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
+
+bgs = [bg, bg_rvrs]
+
 missiles = [missile, missile2, missile3, missile4]
+
+bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45, None, None, None, None)
+
+bullets = [bullet]
 
 stage = "menu"
 while Game:
@@ -272,37 +305,37 @@ while Game:
             theme.play()
             m = 1
         screen.fill((100, 100, 100))
+        if bg.rect.x == -2740:
+            bg.rect.x = 2740
+        elif bg_rvrs.rect.x == -2740:
+            bg_rvrs.rect.x = 2740
+        bg.reset()
+        bg.go()
+        bg_rvrs.reset()
+        bg_rvrs.go()
+
         floor.reset()
         roof.reset()
         barry.animation()
         barry.move()
         barry.reset()
-        lnch = randint(1, 50)
+        for bullet in bullets:
+            bullet.reset()
+            bullet.rect.y += 1
+
+        lnch = randint(1, 70)
         if missile.l == 0:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
-        elif lnch == 30:
+        elif lnch == 35:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
-
-        keys = key.get_pressed()
-        if keys[K_SPACE] and sprite.collide_rect(barry, floor):
-            barry.fall = 4
-        elif sprite.collide_rect(barry, roof):
-            barry.fall = 0
-        elif not keys[K_SPACE]:
-            if sprite.collide_rect(barry, floor):
-                barry.fall = 0
-                barry.rect.y = 675
-                barry.kind = "run"
-            elif not sprite.collide_rect(barry, floor):
-                barry.kind = "fall"
 
     elif stage == "lost":
         screen.fill((100, 0, 0))
