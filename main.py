@@ -89,8 +89,8 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
-            bullet0 = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45, None, None, None, None)
-            bullets.append(bullet0)
+            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45, None, None, None, None)
+            bullets.append(bullet)
 
             for bullet in bullets:
                 bullet.shoot()
@@ -258,6 +258,9 @@ def reset(x, y):
     barry.rect.y = y
     barry.fall = 0
     barry.kind = "run"
+
+    for bullet in bullets:
+        bullet.rect.y = 1001
 
     for missile in missiles:
         missile.l = 1
