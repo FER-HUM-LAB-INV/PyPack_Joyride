@@ -104,6 +104,8 @@ class Barry(GameSprite):
 
         if self.fall >= 10:
             self.fall = 10
+        elif self.fall <= -20:
+            self.fall = -20
 
         if sprite.collide_rect(barry, roof):
             barry.fall = 0
@@ -253,14 +255,27 @@ class Bullets(GameSprite):
         self.rect.x = barry.rect.x + 23.5 + j
 
 
+class Elektrik(GameSprite):
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+        self.image = image.load("img/elektrik.png")
+        self.rect.x = 1001
+        self.rect.y = randint(21, 946)
+
+    def place(self):
+        self.rect.x -= 22
+
+        if self.rect.x <= -150:
+            self.kill()
+
+
 def reset(x, y):
     barry.rect.x = x
     barry.rect.y = y
     barry.fall = 0
     barry.kind = "run"
 
-    for bullet in bullets:
-        bullet.rect.y = 1001
+    bullet.rect.y = 1001
 
     for missile in missiles:
         missile.l = 1
@@ -276,10 +291,10 @@ barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
-missile = Missile_Tracer("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
-missile2 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
-missile3 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
-missile4 = Missile("img/Missile_Target.png", 0, 0, 20, 93, 34, None, None, False, 0)
+missile = Missile_Tracer("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
+missile2 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
+missile3 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
+missile4 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
 
 bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000, None, None, None, None)
 bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
@@ -291,6 +306,8 @@ missiles = [missile, missile2, missile3, missile4]
 bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45, None, None, None, None)
 
 bullets = [bullet]
+
+Elektrik_list = []
 
 stage = "menu"
 while Game:
@@ -324,7 +341,7 @@ while Game:
         barry.reset()
         for bullet in bullets:
             bullet.reset()
-            bullet.rect.y += 1
+            bullet.rect.y += 25
 
         lnch = randint(1, 70)
         if missile.l == 0:
@@ -339,6 +356,18 @@ while Game:
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
+
+        for hor in Elektrik_list:
+            if hor.l == 0:
+                    hor.reset()
+                    hor.place()
+                    if sprite.collide_rect(barry, hor):
+                        stage = "lost"
+
+        if lnch == 70:
+            hor = Elektrik("img/elektrik.png", 1001, 0, 0, 141 * 2, 34 * 2, None, None, None, None)
+            hor.l = 0
+            Elektrik_list.append(hor)
 
     elif stage == "lost":
         screen.fill((100, 0, 0))
