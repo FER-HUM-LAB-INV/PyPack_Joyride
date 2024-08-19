@@ -128,7 +128,7 @@ class BG(GameSprite):
         super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
 
     def go(self):
-        self.rect.x -= 10
+        self.rect.x -= 20
 
 
 class Missile(GameSprite):
@@ -258,9 +258,8 @@ class Bullets(GameSprite):
 class Elektrik(GameSprite):
     def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
         super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
-        self.image = image.load("img/elektrik.png")
         self.rect.x = 1001
-        self.rect.y = randint(21, 946)
+        self.rect.y = randint(21, 718)
 
     def place(self):
         self.rect.x -= 22
@@ -285,6 +284,10 @@ def reset(x, y):
         missile.wait = 0
         missile.rect.x = 1024
         missile.rect.y = 0
+    for elektrik in Elektrik_list:
+        elektrik.l = 1
+        elektrik.rect.x = 1001
+    Elektrik_list.clear()
 
 
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
@@ -343,31 +346,36 @@ while Game:
             bullet.reset()
             bullet.rect.y += 25
 
-        lnch = randint(1, 70)
+        lnch = randint(1, 150)
         if missile.l == 0:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
-        elif lnch == 35:
+        elif lnch == 35 or lnch == 45:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
 
-        for hor in Elektrik_list:
-            if hor.l == 0:
-                    hor.reset()
-                    hor.place()
-                    if sprite.collide_rect(barry, hor):
-                        stage = "lost"
+        for elektrik in Elektrik_list:
+            if elektrik.l == 0:
+                elektrik.reset()
+                elektrik.place()
+                if sprite.collide_rect(barry, elektrik):
+                    stage = "lost"
 
         if lnch == 70:
-            hor = Elektrik("img/elektrik.png", 1001, 0, 0, 141 * 2, 34 * 2, None, None, None, None)
-            hor.l = 0
-            Elektrik_list.append(hor)
+            elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
+            elektrik.l = 0
+            Elektrik_list.append(elektrik)
+
+        elif lnch == 10:
+            elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
+            elektrik.l = 0
+            Elektrik_list.append(elektrik)
 
     elif stage == "lost":
         screen.fill((100, 0, 0))
