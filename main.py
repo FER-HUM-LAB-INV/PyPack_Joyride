@@ -1,5 +1,4 @@
 from random import randint
-import os
 from pygame import *
 
 init()
@@ -52,7 +51,7 @@ class GameSprite(sprite.Sprite):
 
 class Barry(GameSprite):
 
-    def animation(self):
+    def animate(self):
         self.counter += 1
         if self.kind == "run":
             if 0 <= self.counter < 10:
@@ -238,7 +237,7 @@ class Missile(GameSprite):
             self.wait += 1
 
 
-class Missile_Tracer(GameSprite):
+class MissileTracer(GameSprite):
 
     def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
         super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
@@ -340,12 +339,14 @@ def reset(x, y):
 
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
+target = 'img/Missile_Target.png'
+
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
-missile = Missile_Tracer("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
-missile2 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
-missile3 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
-missile4 = Missile("img/Missile_Target.png", 0, 0, 26, 93, 34, None, None, False, 0)
+missile = MissileTracer(target, 0, 0, 26, 93, 34, None, None, False, 0)
+missile2 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
+missile3 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
+missile4 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
 
 bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000, None, None, None, None)
 bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
@@ -368,10 +369,9 @@ while Game:
         if e.type == QUIT:
             exit()
         elif stage == "menu" or stage == "lost":
-            if e.type == MOUSEBUTTONDOWN:
-                if e.button == 1:
-                    stage = "run"
-                    reset(20, 675)
+            if e.type == MOUSEBUTTONDOWN and e.button == 1:
+                stage = "run"
+                reset(20, 675)
 
     if stage == "run":
         if m == 0:
@@ -389,7 +389,7 @@ while Game:
 
         floor.reset()
         roof.reset()
-        barry.animation()
+        barry.animate()
         barry.move()
         barry.reset()
         for bullet in bullets:
@@ -406,11 +406,7 @@ while Game:
                     explode.play()
         elif lnch == 35 or lnch == 45 or lnch == 55:
             for missile in missiles:
-                missile.warning()
-                missile.reset()
-                if sprite.collide_rect(barry, missile):
-                    stage = "lost"
-                    explode.play()
+                missile.l = 0
 
         for elektrik in Elektrik_list:
             if elektrik.l == 0:
