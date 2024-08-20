@@ -18,6 +18,8 @@ display.set_caption("PyPack Joyride")
 warning = mixer.Sound("snd/Warning.mp3")
 launch = mixer.Sound("snd/Launch.mp3")
 theme = mixer.Sound("snd/Theme.mp3")
+explode = mixer.Sound('snd/Explode.mp3')
+Elektric = mixer.Sound("snd/Elektrik.wav")
 MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
 lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 
@@ -120,6 +122,52 @@ class Barry(GameSprite):
                 self.kind = "run"
             elif not sprite.collide_rect(self, floor):
                 self.kind = "fall"
+
+
+class Explosion(GameSprite):
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+        self.frame = 0
+        self.w = w
+        self.h = h
+
+    def explode(self):
+        if self.frame == 0:
+            explode.play()
+        self.frame += 1
+        if 0 <= self.frame <= 4:
+            self.image = transform.scale(image.load("img/gif/2a9n-8.png"), (self.w, self.h))
+        elif 5 <= self.frame <= 9:
+            self.image = transform.scale(image.load("img/gif/2a9n-9.png"), (self.w, self.h))
+        elif 10 <= self.frame <= 14:
+            self.image = transform.scale(image.load("img/gif/2a9n-10.png"), (self.w, self.h))
+        elif 15 <= self.frame <= 9:
+            self.image = transform.scale(image.load("img/gif/2a9n-11.png"), (self.w, self.h))
+        elif 20 <= self.frame <= 24:
+            self.image = transform.scale(image.load("img/gif/2a9n-12.png"), (self.w, self.h))
+        elif 25 <= self.frame <= 29:
+            self.image = transform.scale(image.load("img/gif/2a9n-13.png"), (self.w, self.h))
+        elif 30 <= self.frame <= 34:
+            self.image = transform.scale(image.load("img/gif/2a9n-14.png"), (self.w, self.h))
+        elif 35 <= self.frame <= 39:
+            self.image = transform.scale(image.load("img/gif/2a9n-15.png"), (self.w, self.h))
+        elif 40 <= self.frame <= 44:
+            self.image = transform.scale(image.load("img/gif/2a9n-16.png"), (self.w, self.h))
+        elif 45 <= self.frame <= 49:
+            self.image = transform.scale(image.load("img/gif/17.png"), (self.w, self.h))
+        elif 50 <= self.frame <= 54:
+            self.image = transform.scale(image.load("img/gif/18.png"), (self.w, self.h))
+        elif 55 <= self.frame <= 59:
+            self.image = transform.scale(image.load("img/gif/19.png"), (self.w, self.h))
+        elif 60 <= self.frame <= 64:
+            self.image = transform.scale(image.load("img/gif/20.png"), (self.w, self.h))
+        elif 65 <= self.frame <= 70:
+            self.image = transform.scale(image.load("img/gif/21.png"), (self.w, self.h))
+
+        transform.scale(self.image, (self.w, self.h))
+
+        if self.frame == 70:
+            self.rect.x = 100000
 
 
 class BG(GameSprite):
@@ -304,6 +352,8 @@ bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
 
 bgs = [bg, bg_rvrs]
 
+explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 0, 1000, 1000, None, None, None, None)
+
 missiles = [missile, missile2, missile3, missile4]
 
 bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45, None, None, None, None)
@@ -346,19 +396,21 @@ while Game:
             bullet.reset()
             bullet.rect.y += 25
 
-        lnch = randint(1, 150)
+        lnch = randint(1, 300)
         if missile.l == 0:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
-        elif lnch == 35 or lnch == 45:
+                    explode.play()
+        elif lnch == 35 or lnch == 45 or lnch == 55:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
+                    explode.play()
 
         for elektrik in Elektrik_list:
             if elektrik.l == 0:
@@ -366,6 +418,7 @@ while Game:
                 elektrik.place()
                 if sprite.collide_rect(barry, elektrik):
                     stage = "lost"
+                    Elektric.play()
 
         if lnch == 70:
             elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
@@ -376,6 +429,9 @@ while Game:
             elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
             elektrik.l = 0
             Elektrik_list.append(elektrik)
+
+        explosion.reset()
+        explosion.explode()
 
     elif stage == "lost":
         screen.fill((100, 0, 0))
