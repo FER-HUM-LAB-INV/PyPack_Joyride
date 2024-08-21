@@ -404,7 +404,7 @@ while Game:
                 if sprite.collide_rect(barry, missile):
                     stage = "lost"
                     explode.play()
-        elif lnch == 35 or lnch == 45 or lnch == 55:
+        elif lnch == 35 or lnch == 45 or lnch == 55 or lnch == 65:
             for missile in missiles:
                 missile.l = 0
 
