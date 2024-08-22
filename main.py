@@ -14,6 +14,7 @@ screen_height = 768
 screen = display.set_mode((screen_width, screen_height))
 display.set_caption("PyPack Joyride")
 
+smash = mixer.Sound("snd/smash.mp3")
 warning = mixer.Sound("snd/Warning.mp3")
 launch = mixer.Sound("snd/Launch.mp3")
 theme = mixer.Sound("snd/Theme.mp3")
@@ -24,6 +25,7 @@ lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 
 Game = True
 m = 0
+a = 0
 
 
 class GameSprite(sprite.Sprite):
@@ -392,6 +394,15 @@ while Game:
         barry.animate()
         barry.move()
         barry.reset()
+
+        keys = key.get_pressed()
+        if key[K_SPACE]:
+            a += 1
+            if a == 4:
+                print("sdjwdajblkaefhvblñzdfh")
+                smash.play()
+                a = 0
+
         for bullet in bullets:
             bullet.reset()
             bullet.rect.y += 25
