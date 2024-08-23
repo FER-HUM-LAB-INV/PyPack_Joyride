@@ -20,8 +20,11 @@ theme = mixer.Sound("snd/Theme.mp3")
 explode = mixer.Sound('snd/Explode.mp3')
 Elektric = mixer.Sound("snd/Elektrik.wav")
 MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
+MS_DOS_smol = font.Font("fnt/ModernDOS9x16.ttf", 25)
 lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
-
+disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
+recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!", True, (255, 0, 0))
+halfbrick = MS_DOS_smol.render("ALL RIGHTS RESERVED FOR HALFBRICK STUDIOS!!!", True, (255, 0, 0))
 Game = True
 m = 0
 a = 0
@@ -374,7 +377,13 @@ while Game:
                 stage = "run"
                 reset(20, 675)
 
-    if stage == "run":
+    if stage == "menu":
+        screen.fill((0, 0, 0))
+        screen.blit(disclaimer, (125, 0))
+        screen.blit(recreation, (160, 300))
+        screen.blit(halfbrick, (175, 600))
+
+    elif stage == "run":
         if m == 0:
             theme.play()
             m = 1
