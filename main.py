@@ -1,5 +1,6 @@
 from random import randint
 from pygame import *
+import os
 
 init()
 mixer.init()
@@ -13,21 +14,6 @@ screen_height = 768
 
 screen = display.set_mode((screen_width, screen_height))
 display.set_caption("PyPack Joyride")
-
-warning = mixer.Sound("snd/Warning.mp3")
-launch = mixer.Sound("snd/Launch.mp3")
-theme = mixer.Sound("snd/Theme.mp3")
-explode = mixer.Sound('snd/Explode.mp3')
-Elektric = mixer.Sound("snd/Elektrik.wav")
-MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
-MS_DOS_smol = font.Font("fnt/ModernDOS9x16.ttf", 25)
-lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
-disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
-recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!", True, (255, 0, 0))
-halfbrick = MS_DOS_smol.render("ALL RIGHTS RESERVED FOR HALFBRICK STUDIOS!!!", True, (255, 0, 0))
-Game = True
-m = 0
-a = 0
 
 
 class GameSprite(sprite.Sprite):
@@ -341,16 +327,84 @@ def reset(x, y):
     Elektrik_list.clear()
 
 
+MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
+MS_DOS_smol = font.Font("fnt/ModernDOS9x16.ttf", 25)
+lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
+disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
+recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!", True, (255, 0, 0))
+halfbrick = MS_DOS_smol.render("ALL RIGHTS RESERVED FOR HALFBRICK STUDIOS!!!", True, (255, 0, 0))
+click = MS_DOS_smol.render("PRESS ANYWHERE TO CONTINUE...", True, (255, 0, 0))
+ext = False
+
+while not ext:
+    for e in event.get():
+        if e.type == QUIT:
+            exit()
+
+        elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+            ext = True
+
+    screen.fill((0, 0, 0))
+    screen.blit(disclaimer, (125, 0))
+    screen.blit(recreation, (160, 250))
+    screen.blit(halfbrick, (190, 515))
+    screen.blit(click, (285, 720))
+    clock.tick(fps)
+    display.update()
+
+
+github = MS_DOS_smol.render('Press "G" to redirect to the repository.', True, (255, 0, 0))
+run = True
+while run:
+    for e in event.get():
+        if e.type == QUIT:
+            exit()
+
+        elif e.type == KEYDOWN and e.key == K_g:
+            os.system("github.url")
+
+        elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+            run = False
+
+    screen.fill((0, 0, 0))
+    screen.blit(github, (220, 0))
+    screen.blit(click, (285, 720))
+    clock.tick(fps)
+    display.update()
+
+
+loading = MS_DOS.render("LOADING...", True, (255, 0, 0))
+tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 0, 0))
+
+screen.fill((0, 0, 0))
+screen.blit(loading, (250, 0))
+screen.blit(tmtaw, (300, 550))
+clock.tick(fps)
+display.update()
+
+warning = mixer.Sound("snd/Warning.mp3")
+launch = mixer.Sound("snd/Launch.mp3")
+theme = mixer.Sound("snd/Theme.mp3")
+explode = mixer.Sound('snd/Explode.mp3')
+Elektric = mixer.Sound("snd/Elektrik.wav")
+Game = True
+m = 0
+a = 0
+
+help = MS_DOS_smol.render("You need help, don't you?", True, (255, 0, 0))
+lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 0, 0))
+ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 0, 0))
+
 barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
 
 target = 'img/Missile_Target.png'
 
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
+pepo = GameSprite("pepe-gif.gif", 616, 384, 0, 408, 384, None, None, False, 0)
 missile = MissileTracer(target, 0, 0, 26, 93, 34, None, None, False, 0)
 missile2 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
 missile3 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
-missile4 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
 
 bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000, None, None, None, None)
 bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
@@ -359,31 +413,28 @@ bgs = [bg, bg_rvrs]
 
 explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 0, 1000, 1000, None, None, None, None)
 
-missiles = [missile, missile2, missile3, missile4]
+missiles = [missile, missile2, missile3]
 
 bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45, None, None, None, None)
 
 bullets = [bullet]
 
 Elektrik_list = []
-
-stage = "menu"
+powerup = False
+times = 0
+stage = "run"
+diff = "normal"
 while Game:
     for e in event.get():
         if e.type == QUIT:
             exit()
-        elif stage == "menu" or stage == "lost":
-            if e.type == MOUSEBUTTONDOWN and e.button == 1:
-                stage = "run"
-                reset(20, 675)
+        elif stage == "lost" and e.type == MOUSEBUTTONDOWN and e.button == 1:
+            reset(20, 675)
+            stage = "run"
+        elif e.type == KEYDOWN and e.key == K_o:
+            times = 9
 
-    if stage == "menu":
-        screen.fill((0, 0, 0))
-        screen.blit(disclaimer, (125, 0))
-        screen.blit(recreation, (160, 300))
-        screen.blit(halfbrick, (175, 600))
-
-    elif stage == "run":
+    if stage == "run":
         if m == 0:
             theme.play()
             m = 1
@@ -407,42 +458,77 @@ while Game:
             bullet.reset()
             bullet.rect.y += 25
 
-        lnch = randint(1, 300)
+        lnch = randint(1, 250)
         if missile.l == 0:
             for missile in missiles:
                 missile.warning()
                 missile.reset()
-                if sprite.collide_rect(barry, missile):
+                if not powerup and sprite.collide_rect(barry, missile):
                     stage = "lost"
                     explode.play()
-        elif lnch == 35 or lnch == 45 or lnch == 55 or lnch == 65:
-            for missile in missiles:
-                missile.l = 0
+                    times += 1
 
         for elektrik in Elektrik_list:
             if elektrik.l == 0:
                 elektrik.reset()
                 elektrik.place()
-                if sprite.collide_rect(barry, elektrik):
+                if not powerup and sprite.collide_rect(barry, elektrik):
                     stage = "lost"
                     Elektric.play()
+                    times += 1
+        
+        if diff == "normal":
+            if lnch == 70 or lnch == 80 or lnch == 90:
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
+                elektrik.l = 0
+                Elektrik_list.append(elektrik)
 
-        if lnch == 70:
-            elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
-            elektrik.l = 0
-            Elektrik_list.append(elektrik)
+            elif lnch == 10 or lnch == 20 or lnch == 30:
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
+                elektrik.l = 0
+                Elektrik_list.append(elektrik)
 
-        elif lnch == 10:
-            elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
-            elektrik.l = 0
-            Elektrik_list.append(elektrik)
+            elif lnch == 35 or lnch == 45 or lnch == 55:
+                for missile in missiles:
+                    missile.l = 0
+        else:
+            if lnch == 70:
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
+                elektrik.l = 0
+                Elektrik_list.append(elektrik)
+
+            elif lnch == 10:
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
+                elektrik.l = 0
+                Elektrik_list.append(elektrik)
+
+            elif lnch == 35:
+                for missile in missiles:
+                    missile.l = 0
 
         explosion.reset()
         explosion.explode()
 
     elif stage == "lost":
-        screen.fill((100, 0, 0))
-        screen.blit(lost, (525 - lost.get_width() // 2, 375 - lost.get_height() // 2))
+        print("Times: " + str(times))
+        while times == 10 or times == 11 or times == 12:
+            screen.fill((0, 0, 0))
+            pepo.reset()
+            screen.blit(help, (250, 0))
+            screen.blit(lhelp, (250, 200))
+            screen.blit(ihelp, (0, 400))
+            for e in event.get():
+                if e.type == QUIT:
+                    exit()
+                if e.type == KEYDOWN and e.key == K_h:
+                    print("pressed")
+                    diff = "less"
+                    times = 13
+            clock.tick(fps)
+            display.update()
+        else:
+            screen.fill((100, 0, 0))
+            screen.blit(lost, (525 - lost.get_width() // 2, 375 - lost.get_height() // 2))
 
     clock.tick(fps)
     display.update()
