@@ -1,5 +1,6 @@
 from random import randint
 from pygame import *
+from time import sleep
 import os
 
 init()
@@ -364,7 +365,7 @@ lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
 recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!", True, (255, 0, 0))
 halfbrick = MS_DOS_smol.render("ALL RIGHTS RESERVED FOR HALFBRICK STUDIOS!!!", True, (255, 0, 0))
-click = MS_DOS_smol.render("PRESS ANYWHERE TO CONTINUE...", True, (255, 0, 0))
+click = MS_DOS_smol.render("PRESS ANYWHERE TO CONTINUE...", True, (255, 255, 255))
 ext = False
 
 while not ext:
@@ -384,7 +385,7 @@ while not ext:
     display.update()
 
 
-github = MS_DOS_smol.render('Press "G" to redirect to the repository.', True, (255, 0, 0))
+github = MS_DOS_smol.render('Press "G" to redirect to the repository.', True, (255, 255, 255))
 run = True
 while run:
     for e in event.get():
@@ -404,8 +405,8 @@ while run:
     display.update()
 
 
-loading = MS_DOS.render("LOADING...", True, (255, 0, 0))
-tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 0, 0))
+loading = MS_DOS.render("LOADING...", True, (255, 255, 255))
+tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 255, 255))
 
 screen.fill((0, 0, 0))
 screen.blit(loading, (250, 0))
@@ -422,12 +423,12 @@ Game = True
 m = 0
 a = 0
 
-help = MS_DOS_smol.render("You need help, don't you?", True, (255, 0, 0))
-lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 0, 0))
-ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 0, 0))
-usure = MS_DOS.render("ARE YOU SURE???", True, (255, 0, 0))
-usure2 = MS_DOS_smol.render("If you click, you will continue.", True, (255, 0, 0))
-usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', True, (255, 0, 0))
+help = MS_DOS_smol.render("You need help, don't you?", True, (255, 255, 255))
+lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 255, 255))
+ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 255, 255))
+usure = MS_DOS.render("ARE YOU SURE???", True, (150, 0, 0))
+usure2 = MS_DOS_smol.render("If you click, you will continue.", True, (150, 0, 0))
+usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', True, (150, 0, 0))
 
 barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 
@@ -585,6 +586,7 @@ while Game:
                     times = 13
             clock.tick(fps)
             display.update()
+            sleep(0.5)
         while times == 13:
             screen.fill((0, 0, 0))
             pepo_shock.reset()
@@ -594,6 +596,7 @@ while Game:
             for e in event.get():
                 if e.type == QUIT:
                     exit()
+
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     print("click")
                     reset(20, 675)
@@ -603,6 +606,7 @@ while Game:
                     times = 14
             clock.tick(fps)
             display.update()
+            sleep(2)
         else:
             screen.fill((100, 0, 0))
             screen.blit(lost, (525 - lost.get_width() // 2, 375 - lost.get_height() // 2))
