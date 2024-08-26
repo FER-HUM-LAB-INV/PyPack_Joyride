@@ -17,9 +17,8 @@ display.set_caption("PyPack Joyride")
 
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, filename, x, y, speed, w, h):
+    def __init__(self, filename, x, y, w, h):
         super().__init__()
-        self.speed = speed
         self.image = transform.scale(image.load(filename), (w, h))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -35,8 +34,8 @@ class GameSprite(sprite.Sprite):
 
 class Barry(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
         self.fall = 0
         self.counter = 0
         self.kind = "run"
@@ -80,7 +79,7 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
-            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45)
+            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 10, 45)
             bullets.append(bullet)
 
             for bullet in bullets:
@@ -114,8 +113,8 @@ class Barry(GameSprite):
 
 
 class Explosion(GameSprite):
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
         self.frame = 0
         self.w = w
         self.h = h
@@ -161,8 +160,8 @@ class Explosion(GameSprite):
 
 class BG(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
 
     def go(self):
         self.rect.x -= 20
@@ -170,8 +169,9 @@ class BG(GameSprite):
 
 class Missile(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
+        self.speed = 26
         self.counter = 0
         self.launched = None
         self.l = None
@@ -231,8 +231,9 @@ class Missile(GameSprite):
 
 class MissileTracer(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
+        self.speed = 26
         self.counter = 0
         self.launched = None
         self.l = None
@@ -297,8 +298,8 @@ class Bullets(GameSprite):
 
 
 class Elektrik(GameSprite):
-    def __init__(self, filename, x, y, speed, w, h):
-        super().__init__(filename, x, y, speed, w, h)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
         self.rect.x = 1001
         self.rect.y = randint(21, 718)
 
@@ -310,10 +311,23 @@ class Elektrik(GameSprite):
 
 
 class Koin(GameSprite):
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h)
-        self.rect.x = 1001
-        self.rect.y = randint(21, 718)
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
+        self.fall = 0
+        self.image = image.load("img/Koin.png")
+        self.orientation = "positive"
+
+    def float(self):
+        self.rect.y -= self.fall
+        if self.fall >= 10:
+            self.orientation = "negative"
+        elif self.fall <= -10:
+            self.orientation = "positive"
+
+        if self.orientation == "positive":
+            self.fall += 0.5
+        elif self.orientation == "negative":
+            self.fall -= 0.5
 
 
 def reset(x, y):
@@ -405,28 +419,32 @@ a = 0
 help = MS_DOS_smol.render("You need help, don't you?", True, (255, 0, 0))
 lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 0, 0))
 ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 0, 0))
+usure = MS_DOS.render("ARE YOU SURE???", True, (255, 0, 0))
+usure2 = MS_DOS_smol.render("If you click, you will continue.", True, (255, 0, 0))
+usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', True, (255, 0, 0))
 
-barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74)
+barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 
 target = 'img/Missile_Target.png'
+koin = Koin("img/Koin.png", 125, 384, 225, 225)
+floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 1024, 20)
+roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 1024, 20)
+pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
+pepo_shock = GameSprite("img/pepo_shock.png", 584, 336, 440, 432)
+missile = MissileTracer(target, 0, 0, 93, 34)
+missile2 = Missile(target, 0, 0, 93, 34)
+missile3 = Missile(target, 0, 0, 93, 34)
 
-floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20)
-roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20)
-pepo = GameSprite("pepe-gif.gif", 616, 384, 0, 408, 384)
-missile = MissileTracer(target, 0, 0, 26, 93, 34)
-missile2 = Missile(target, 0, 0, 26, 93, 34)
-missile3 = Missile(target, 0, 0, 26, 93, 34)
-
-bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000)
-bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000)
+bg = BG("img/bg.jpg", 0, 0, 2740, 1000)
+bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 2740, 1000)
 
 bgs = [bg, bg_rvrs]
 
-explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 0, 1000, 1000)
+explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 1000, 1000)
 
 missiles = [missile, missile2, missile3]
 
-bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45)
+bullet = Bullets("img/Bullet.png", 500, 450, 10, 45)
 
 bullets = [bullet]
 
@@ -464,6 +482,8 @@ while Game:
         barry.animate()
         barry.move()
         barry.reset()
+        koin.reset()
+        koin.float()
 
         for bullet in bullets:
             bullet.reset()
@@ -490,12 +510,12 @@ while Game:
 
         if diff == "normal":
             if lnch == 70 or lnch == 80 or lnch == 90:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68)
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10 or lnch == 20 or lnch == 30:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282)
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
@@ -504,12 +524,12 @@ while Game:
                     missile.l = 0
         else:
             if lnch == 70:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68)
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282)
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
@@ -532,9 +552,27 @@ while Game:
                 if e.type == QUIT:
                     exit()
                 if e.type == KEYDOWN and e.key == K_h:
-                    print("pressed")
                     diff = "less"
+                    times = 14
+                elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     times = 13
+            clock.tick(fps)
+            display.update()
+        while times == 13:
+            screen.fill((0, 0, 0))
+            pepo_shock.reset()
+            screen.blit(usure, (150, 0))
+            screen.blit(usure2, (200, 200))
+            screen.blit(usure3, (0, 400))
+            for e in event.get():
+                if e.type == QUIT:
+                    exit()
+                elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+                    reset(20, 675)
+                    stage = "run"
+                elif e.type == KEYDOWN and e.key == K_h:
+                    diff = "less"
+                    times = 14
             clock.tick(fps)
             display.update()
         else:
