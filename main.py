@@ -17,7 +17,7 @@ display.set_caption("PyPack Joyride")
 
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+    def __init__(self, filename, x, y, speed, w, h):
         super().__init__()
         self.speed = speed
         self.image = transform.scale(image.load(filename), (w, h))
@@ -26,12 +26,6 @@ class GameSprite(sprite.Sprite):
         self.rect.y = y
         self.w = w
         self.h = h
-        self.counter = 0
-        self.fall = 0
-        self.kind = kind
-        self.pos = pos
-        self.launched = launched
-        self.i = i
 
     def reset(self):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -40,6 +34,12 @@ class GameSprite(sprite.Sprite):
 
 
 class Barry(GameSprite):
+
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
+        self.fall = 0
+        self.counter = 0
+        self.kind = "run"
 
     def animate(self):
         self.counter += 1
@@ -80,7 +80,7 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
-            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45, None, None, None, None)
+            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 0, 10, 45)
             bullets.append(bullet)
 
             for bullet in bullets:
@@ -114,8 +114,8 @@ class Barry(GameSprite):
 
 
 class Explosion(GameSprite):
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
         self.frame = 0
         self.w = w
         self.h = h
@@ -161,8 +161,8 @@ class Explosion(GameSprite):
 
 class BG(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
 
     def go(self):
         self.rect.x -= 20
@@ -170,8 +170,10 @@ class BG(GameSprite):
 
 class Missile(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
+        self.counter = 0
+        self.launched = None
         self.l = None
         self.f = None
         self.wait = None
@@ -229,8 +231,10 @@ class Missile(GameSprite):
 
 class MissileTracer(GameSprite):
 
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
+        self.counter = 0
+        self.launched = None
         self.l = None
         self.f = None
         self.wait = None
@@ -293,8 +297,8 @@ class Bullets(GameSprite):
 
 
 class Elektrik(GameSprite):
-    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
-        super().__init__(filename, x, y, speed, w, h, kind, pos, launched, i)
+    def __init__(self, filename, x, y, speed, w, h):
+        super().__init__(filename, x, y, speed, w, h)
         self.rect.x = 1001
         self.rect.y = randint(21, 718)
 
@@ -303,6 +307,13 @@ class Elektrik(GameSprite):
 
         if self.rect.x <= -150:
             self.kill()
+
+
+class Koin(GameSprite):
+    def __init__(self, filename, x, y, speed, w, h, kind, pos, launched, i):
+        super().__init__(filename, x, y, speed, w, h)
+        self.rect.x = 1001
+        self.rect.y = randint(21, 718)
 
 
 def reset(x, y):
@@ -395,27 +406,27 @@ help = MS_DOS_smol.render("You need help, don't you?", True, (255, 0, 0))
 lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 0, 0))
 ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 0, 0))
 
-barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74, "run", None, False, 0)
+barry = Barry("img/Walk1.png", 20, 675, 10, 64, 74)
 
 target = 'img/Missile_Target.png'
 
-floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20, None, None, False, 0)
-roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20, None, None, False, 0)
-pepo = GameSprite("pepe-gif.gif", 616, 384, 0, 408, 384, None, None, False, 0)
-missile = MissileTracer(target, 0, 0, 26, 93, 34, None, None, False, 0)
-missile2 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
-missile3 = Missile(target, 0, 0, 26, 93, 34, None, None, False, 0)
+floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 0, 1024, 20)
+roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 0, 1024, 20)
+pepo = GameSprite("pepe-gif.gif", 616, 384, 0, 408, 384)
+missile = MissileTracer(target, 0, 0, 26, 93, 34)
+missile2 = Missile(target, 0, 0, 26, 93, 34)
+missile3 = Missile(target, 0, 0, 26, 93, 34)
 
-bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000, None, None, None, None)
-bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000, None, None, None, None)
+bg = BG("img/bg.jpg", 0, 0, 0, 2740, 1000)
+bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 0, 2740, 1000)
 
 bgs = [bg, bg_rvrs]
 
-explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 0, 1000, 1000, None, None, None, None)
+explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 0, 1000, 1000)
 
 missiles = [missile, missile2, missile3]
 
-bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45, None, None, None, None)
+bullet = Bullets("img/Bullet.png", 500, 450, 0, 10, 45)
 
 bullets = [bullet]
 
@@ -476,15 +487,15 @@ while Game:
                     stage = "lost"
                     Elektric.play()
                     times += 1
-        
+
         if diff == "normal":
             if lnch == 70 or lnch == 80 or lnch == 90:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10 or lnch == 20 or lnch == 30:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
@@ -493,12 +504,12 @@ while Game:
                     missile.l = 0
         else:
             if lnch == 70:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68, None, None, None, None)
+                elektrik = Elektrik("img/elektrik.png", 1001, 0, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282, None, None, None, None)
+                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
