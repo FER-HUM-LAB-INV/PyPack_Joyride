@@ -508,6 +508,7 @@ while Game:
         elif koin.l == 0:
             koin.rect.x = 1024
             koin.rect.y = randint(450, 490)
+            koin.fall = 0
 
         lnch = randint(1, 250)
         if missile.l == 0:
