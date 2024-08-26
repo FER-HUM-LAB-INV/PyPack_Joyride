@@ -17,6 +17,11 @@ screen = display.set_mode((screen_width, screen_height))
 display.set_caption("PyPack Joyride")
 
 
+def update_():
+    clock.tick(fps)
+    display.update()
+
+
 class GameSprite(sprite.Sprite):
     def __init__(self, filename, x, y, w, h):
         super().__init__()
@@ -362,6 +367,15 @@ def reset(x, y):
 
 MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
 MS_DOS_smol = font.Font("fnt/ModernDOS9x16.ttf", 25)
+
+def text(text, x, y):
+    screen.fill((0, 0, 0))
+    screen.blit(loading, (430, 0))
+    screen.blit(tmtaw, (475, 720))
+    textSurface = MS_DOS_smol.render(text, True, (255, 255, 255))
+    screen.blit(textSurface, (x, y))
+    update_()
+
 lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
 recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!", True, (255, 0, 0))
@@ -402,8 +416,7 @@ while run:
     screen.fill((0, 0, 0))
     screen.blit(github, (405, 0))
     screen.blit(click, (455, 720))
-    clock.tick(fps)
-    display.update()
+    update_()
 
 
 loading = MS_DOS.render("LOADING...", True, (255, 255, 255))
@@ -412,46 +425,80 @@ tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 255, 255))
 screen.fill((0, 0, 0))
 screen.blit(loading, (430, 0))
 screen.blit(tmtaw, (475, 720))
-clock.tick(fps)
-display.update()
+update_()
 
+text("snd/Warning.mp3", 525, 360)
 warning = mixer.Sound("snd/Warning.mp3")
+text("snd/Launch.mp3", 525, 360)
 launch = mixer.Sound("snd/Launch.mp3")
+text("snd/Theme.mp3", 525, 360)
 theme = mixer.Sound("snd/Theme.mp3")
+text("snd/Explode.mp3", 525, 360)
 explode = mixer.Sound('snd/Explode.mp3')
+text("snd/Elektrik.wav", 525, 360)
 Elektric = mixer.Sound("snd/Elektrik.wav")
 Game = True
 m = 0
 a = 0
 
+text("help = MS_DOS_smol.render", 525, 360)
 help = MS_DOS_smol.render("You need help, don't you?", True, (255, 255, 255))
+text("lhelp = MS_DOS_smol.render", 525, 360)
 lhelp = MS_DOS_smol.render("If you need help, tap 'H'.", True, (255, 255, 255))
+text("ihelp = MS_DOS_smol.render", 525, 360)
 ihelp = MS_DOS_smol.render("That will decrease the chances of the obstacles appearing.", True, (255, 255, 255))
+text("usure = MS_DOS.render", 525, 360)
 usure = MS_DOS.render("ARE YOU SURE???", True, (150, 0, 0))
+text("usure2 = MS_DOS_smol.render", 525, 360)
 usure2 = MS_DOS_smol.render("If you click, you will continue.", True, (150, 0, 0))
+text("usure3 = MS_DOS_smol.render", 525, 360)
 usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', True, (150, 0, 0))
 
+text("img/Fly1.png", 525, 360)
+text("img/Fly2.png", 525, 360)
+text("img/Fly3.png", 525, 360)
+text("img/Fly4.png", 525, 360)
+text("img/FlyFall.png", 525, 360)
+text("img/Walk1.png", 525, 360)
+text("img/Walk2.png", 525, 360)
+text("img/Walk3.png", 525, 360)
+text("img/Walk4.png", 525, 360)
 barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 
+text('img/Missile_target.png', 525, 360)
 target = 'img/Missile_Target.png'
+text("img/Koin.png", 525, 360)
 koin = Koin("img/Koin.png", 1366, 470, 80, 80)
+text("img/Floor.png", 525, 360)
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 1024, 20)
+text("img/Roof.png", 525, 360)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 1024, 20)
+text("pepe-gif.gif", 525, 360)
 pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
+text("img/pepo_shock.png", 525, 360)
 pepo_shock = GameSprite("img/pepo_shock.png", 0, 336, 440, 432)
+text("img/Missile_Target.png", 525, 360)
 missile = MissileTracer(target, 0, 0, 93, 34)
+text("img/Rocket1.png", 525, 360)
 missile2 = Missile(target, 0, 0, 93, 34)
+text("img/Rocket2.png", 525, 360)
 missile3 = Missile(target, 0, 0, 93, 34)
+text("img/Rocket3.png", 525, 360)
+text("img/Rocket4.png", 525, 360)
 
+text("img/bg.jpg", 525, 360)
 bg = BG("img/bg.jpg", 0, 0, 2740, 1000)
+text("img/bg_rvrs.jpg", 525, 360)
 bg_rvrs = BG("img/bg_rvrs.jpg", 2740, 0, 2740, 1000)
 
 bgs = [bg, bg_rvrs]
 
+text("img/[explosions].png", 525, 360)
 explosion = Explosion("img/gif/2a9n-8.png", 0, 0, 1000, 1000)
 
 missiles = [missile, missile2, missile3]
 
+text("img/bullet.png", 525, 360)
 bullet = Bullets("img/Bullet.png", 500, 450, 10, 45)
 
 bullets = [bullet]
@@ -509,7 +556,7 @@ while Game:
 
         elif koin.l == 0:
             koin.rect.x = 1366
-            koin.rect.y = randint(450, 490)
+            koin.rect.y = 460
             koin.fall = 0
 
         lnch = randint(1, 250)
@@ -585,8 +632,7 @@ while Game:
                     times = 14
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     times = 13
-            clock.tick(fps)
-            display.update()
+            update_()
             sleep(0.5)
         while times == 13:
             screen.fill((0, 0, 0))
@@ -605,12 +651,9 @@ while Game:
                 elif e.type == KEYDOWN and e.key == K_h:
                     diff = "less"
                     times = 14
-            clock.tick(fps)
-            display.update()
-            sleep(2)
+            update_()
         else:
             screen.fill((100, 0, 0))
             screen.blit(lost, (440, 330))
 
-    clock.tick(fps)
-    display.update()
+    update_()
