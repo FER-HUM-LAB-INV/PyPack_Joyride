@@ -378,10 +378,10 @@ while not ext:
             ext = True
 
     screen.fill((0, 0, 0))
-    screen.blit(disclaimer, (125, 0))
-    screen.blit(recreation, (160, 250))
-    screen.blit(halfbrick, (190, 515))
-    screen.blit(click, (285, 720))
+    screen.blit(disclaimer, (300, 0))
+    screen.blit(recreation, (335, 250))
+    screen.blit(halfbrick, (345, 515))
+    screen.blit(click, (455, 720))
     clock.tick(fps)
     display.update()
 
@@ -400,8 +400,8 @@ while run:
             run = False
 
     screen.fill((0, 0, 0))
-    screen.blit(github, (220, 0))
-    screen.blit(click, (285, 720))
+    screen.blit(github, (405, 0))
+    screen.blit(click, (455, 720))
     clock.tick(fps)
     display.update()
 
@@ -410,8 +410,8 @@ loading = MS_DOS.render("LOADING...", True, (255, 255, 255))
 tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 255, 255))
 
 screen.fill((0, 0, 0))
-screen.blit(loading, (250, 0))
-screen.blit(tmtaw, (300, 550))
+screen.blit(loading, (430, 0))
+screen.blit(tmtaw, (475, 720))
 clock.tick(fps)
 display.update()
 
@@ -574,9 +574,9 @@ while Game:
         while times == 10 or times == 11 or times == 12:
             screen.fill((0, 0, 0))
             pepo.reset()
-            screen.blit(help, (250, 0))
-            screen.blit(lhelp, (250, 200))
-            screen.blit(ihelp, (0, 400))
+            screen.blit(help, (500, 0))
+            screen.blit(lhelp, (500, 150))
+            screen.blit(ihelp, (290, 300))
             for e in event.get():
                 if e.type == QUIT:
                     exit()
@@ -591,9 +591,9 @@ while Game:
         while times == 13:
             screen.fill((0, 0, 0))
             pepo_shock.reset()
-            screen.blit(usure, (150, 0))
-            screen.blit(usure2, (200, 200))
-            screen.blit(usure3, (0, 400))
+            screen.blit(usure, (280, 0))
+            screen.blit(usure2, (475, 200))
+            screen.blit(usure3, (400, 400))
             for e in event.get():
                 if e.type == QUIT:
                     exit()
@@ -610,7 +610,7 @@ while Game:
             sleep(2)
         else:
             screen.fill((100, 0, 0))
-            screen.blit(lost, (525 - lost.get_width() // 2, 375 - lost.get_height() // 2))
+            screen.blit(lost, (440, 330))
 
     clock.tick(fps)
     display.update()
