@@ -316,18 +316,24 @@ class Koin(GameSprite):
         self.fall = 0
         self.image = image.load("img/Koin.png")
         self.orientation = "positive"
+        self.l = 0
 
     def float(self):
         self.rect.y -= self.fall
-        if self.fall >= 10:
+        self.rect.x -= 16
+        if self.fall >= 13:
             self.orientation = "negative"
-        elif self.fall <= -10:
+        elif self.fall <= -13:
             self.orientation = "positive"
+            self.fall += 0.5001
 
         if self.orientation == "positive":
             self.fall += 0.5
         elif self.orientation == "negative":
             self.fall -= 0.5
+
+        if self.rect.x <= -150:
+            self.l = 0
 
 
 def reset(x, y):
@@ -426,11 +432,11 @@ usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', Tr
 barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 
 target = 'img/Missile_Target.png'
-koin = Koin("img/Koin.png", 125, 384, 225, 225)
+koin = Koin("img/Koin.png", 1024, 470, 80, 80)
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 1024, 20)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 1024, 20)
 pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
-pepo_shock = GameSprite("img/pepo_shock.png", 584, 336, 440, 432)
+pepo_shock = GameSprite("img/pepo_shock.png", 0, 336, 440, 432)
 missile = MissileTracer(target, 0, 0, 93, 34)
 missile2 = Missile(target, 0, 0, 93, 34)
 missile3 = Missile(target, 0, 0, 93, 34)
@@ -482,12 +488,26 @@ while Game:
         barry.animate()
         barry.move()
         barry.reset()
-        koin.reset()
-        koin.float()
 
         for bullet in bullets:
             bullet.reset()
             bullet.rect.y += 25
+
+        koin_rand = randint(1, 1000)
+
+        if koin_rand == 500 and not powerup:
+            koin.l = 1
+
+        if koin.l == 1:
+            koin.reset()
+            koin.float()
+            if sprite.collide_rect(barry, koin):
+                powerup = True
+                koin.l = 0
+
+        elif koin.l == 0:
+            koin.rect.x = 1024
+            koin.rect.y = randint(450, 490)
 
         lnch = randint(1, 250)
         if missile.l == 0:
@@ -498,6 +518,9 @@ while Game:
                     stage = "lost"
                     explode.play()
                     times += 1
+                if powerup and sprite.collide_rect(barry, missile):
+                    powerup = False
+                    missiles.remove(missile)
 
         for elektrik in Elektrik_list:
             if elektrik.l == 0:
@@ -507,6 +530,9 @@ while Game:
                     stage = "lost"
                     Elektric.play()
                     times += 1
+                if powerup and sprite.collide_rect(barry, elektrik):
+                    powerup = False
+                    Elektrik_list.remove(elektrik)
 
         if diff == "normal":
             if lnch == 70 or lnch == 80 or lnch == 90:
@@ -568,8 +594,9 @@ while Game:
                 if e.type == QUIT:
                     exit()
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+                    print("click")
                     reset(20, 675)
-                    stage = "run"
+                    times = 14
                 elif e.type == KEYDOWN and e.key == K_h:
                     diff = "less"
                     times = 14
