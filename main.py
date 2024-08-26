@@ -10,7 +10,7 @@ font.init()
 clock = time.Clock()
 fps = 60
 
-screen_width = 1024
+screen_width = 1366
 screen_height = 768
 
 screen = display.set_mode((screen_width, screen_height))
@@ -89,7 +89,7 @@ class Barry(GameSprite):
             self.kind = "fly"
             print(self.fall)
             self.rect.y -= self.fall
-            self.fall += 0.5
+            self.fall += 0.75
             if sprite.collide_rect(self, floor):
                 self.fall = 4
 
@@ -103,7 +103,7 @@ class Barry(GameSprite):
 
         if not keys[K_SPACE]:
             print(self.fall)
-            self.fall -= 0.5
+            self.fall -= 0.75
             self.rect.y -= self.fall
             if sprite.collide_rect(self, floor):
                 self.fall = 0
@@ -199,13 +199,14 @@ class Missile(GameSprite):
             self.pos = randint(20, 714)
             warning.play()
             self.l = 0
+            self.rect.y = self.pos
         self.launch()
 
     def launch(self):
 
         if not self.launched:
             self.i = 0
-            self.rect.x = 1024
+            self.rect.x = 1340
             self.launched = True
             self.wait = 0
             self.f = 0
@@ -267,7 +268,7 @@ class MissileTracer(GameSprite):
 
         if not self.launched:
             self.i = 0
-            self.rect.x = 1024
+            self.rect.x = 1340
             self.launched = True
             self.wait = 0
             self.f = 0
@@ -301,7 +302,7 @@ class Bullets(GameSprite):
 class Elektrik(GameSprite):
     def __init__(self, filename, x, y, w, h):
         super().__init__(filename, x, y, w, h)
-        self.rect.x = 1001
+        self.rect.x = 1400
         self.rect.y = randint(21, 718)
 
     def place(self):
@@ -351,11 +352,11 @@ def reset(x, y):
         missile.f = 1
         missile.i = 0
         missile.wait = 0
-        missile.rect.x = 1024
+        missile.rect.x = 1400
         missile.rect.y = 0
     for elektrik in Elektrik_list:
         elektrik.l = 1
-        elektrik.rect.x = 1001
+        elektrik.rect.x = 1400
     Elektrik_list.clear()
 
 
@@ -433,7 +434,7 @@ usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', Tr
 barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 
 target = 'img/Missile_Target.png'
-koin = Koin("img/Koin.png", 1024, 470, 80, 80)
+koin = Koin("img/Koin.png", 1366, 470, 80, 80)
 floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 1024, 20)
 roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 1024, 20)
 pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
@@ -507,7 +508,7 @@ while Game:
                 koin.l = 0
 
         elif koin.l == 0:
-            koin.rect.x = 1024
+            koin.rect.x = 1366
             koin.rect.y = randint(450, 490)
             koin.fall = 0
 
@@ -538,12 +539,12 @@ while Game:
 
         if diff == "normal":
             if lnch == 70 or lnch == 80 or lnch == 90:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 282, 68)
+                elektrik = Elektrik("img/elektrik.png", 1376, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10 or lnch == 20 or lnch == 30:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 68, 282)
+                elektrik = Elektrik("img/elektrik_vert.png", 1376, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
@@ -552,12 +553,12 @@ while Game:
                     missile.l = 0
         else:
             if lnch == 70:
-                elektrik = Elektrik("img/elektrik.png", 1001, 0, 282, 68)
+                elektrik = Elektrik("img/elektrik.png", 1376, 0, 282, 68)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
             elif lnch == 10:
-                elektrik = Elektrik("img/elektrik_vert.png", 1001, 0, 68, 282)
+                elektrik = Elektrik("img/elektrik_vert.png", 1376, 0, 68, 282)
                 elektrik.l = 0
                 Elektrik_list.append(elektrik)
 
