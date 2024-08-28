@@ -14,7 +14,7 @@ fps = 60
 screen_width = 1366
 screen_height = 768
 
-screen = display.set_mode((screen_width, screen_height))
+screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
 display.set_caption("PyPack Joyride")
 
 
@@ -736,6 +736,7 @@ while Game:
     elif stage == "lost":
         print("Times: " + str(times))
         while times == 10 or times == 11 or times == 12:
+            screen.fill((25, 25, 25))
             pepo.reset()
             screen.blit(help, (500, 0))
             screen.blit(lhelp, (500, 150))
@@ -748,9 +749,14 @@ while Game:
                     times = 14
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     times = 13
+
+            if deth10.o == 1:
+                deth10.reset()
+                deth10.show()
             update_()
 
         while times == 13:
+            screen.fill((25, 25, 25))
             pepo_shock.reset()
             screen.blit(usure, (280, 0))
             screen.blit(usure2, (475, 200))
@@ -765,6 +771,10 @@ while Game:
                 elif e.type == KEYDOWN and e.key == K_h:
                     diff = "less"
                     times = 14
+
+            if deth10.o == 1:
+                deth10.reset()
+                deth10.show()
             update_()
 
         while times == 50 or times == 51 or times == 52 or times == 53:
@@ -779,6 +789,10 @@ while Game:
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     reset(20, 675)
                     times = 54
+
+            if deth50.o == 1:
+                deth50.reset()
+                deth50.show()
             update_()
         while times == 54:
             screen.fill((25, 25, 25))
@@ -792,6 +806,10 @@ while Game:
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     reset(20, 675)
                     times = 55
+
+            if deth50.o == 1:
+                deth50.reset()
+                deth50.show()
             update_()
         else:
             screen.fill((100, 0, 0))
@@ -801,6 +819,7 @@ while Game:
         try:
             open("data/death1", "x")
             deth1.o = 1
+            deth1.orientation = "positive"
         except FileExistsError:
             pass
 
@@ -808,6 +827,7 @@ while Game:
         try:
             open("data/death10", "x")
             deth10.o = 1
+            deth10.orientation = "positive"
         except FileExistsError:
             pass
 
@@ -815,6 +835,7 @@ while Game:
         try:
             open("data/death50", "x")
             deth50.o = 1
+            deth50.orientation = "positive"
         except FileExistsError:
             pass
 
