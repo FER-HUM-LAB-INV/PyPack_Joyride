@@ -113,7 +113,7 @@ class Barry(GameSprite):
             self.rect.y -= self.fall
             if sprite.collide_rect(self, floor):
                 self.fall = 0
-                self.rect.y = 675
+                self.rect.y = 645
                 self.kind = "run"
             elif not sprite.collide_rect(self, floor):
                 self.kind = "fall"
@@ -562,9 +562,9 @@ target = 'img/Missile_Target.png'
 text("img/Koin.png", 525, 360)
 koin = Koin("img/Koin.png", 1366, 470, 80, 80)
 text("img/Floor.png", 525, 360)
-floor = GameSprite("img/BarryFullSpriteSheet.png", 0, 748, 1024, 20)
+floor = GameSprite("img/floor.png", 0, 718, screen_width, 50)
 text("img/Roof.png", 525, 360)
-roof = GameSprite("img/BarryFullSpriteSheet.png", 0, 0, 1024, 20)
+roof = GameSprite("img/roof.png", 0, 0, screen_width, 40)
 text("pepe-gif.gif", 525, 360)
 pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
 text("img/pepo_shock.png", 525, 360)
@@ -667,7 +667,7 @@ while Game:
                 koin.l = 0
                 try:
                     open("data/koin", "x")
-                    koin.o = 1
+                    pepo_koin.o = 1
                 except FileExistsError:
                     pass
 
@@ -676,7 +676,7 @@ while Game:
             koin.rect.y = 460
             koin.fall = 0
 
-        lnch = randint(1, 250)
+        lnch = randint(1, 225)
         if missile.l == 0:
             for missile in missiles:
                 missile.warning()
