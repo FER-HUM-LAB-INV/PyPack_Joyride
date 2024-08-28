@@ -1,6 +1,5 @@
 from random import randint
 from pygame import *
-from time import sleep
 import os
 
 init()
@@ -314,7 +313,7 @@ class Elektrik(GameSprite):
         self.rect.x -= 22
 
         if self.rect.x <= -150:
-            self.kill()
+            Elektrik_list.remove(self)
 
 
 class Koin(GameSprite):
@@ -359,22 +358,42 @@ def reset(x, y):
         missile.wait = 0
         missile.rect.x = 1400
         missile.rect.y = 0
-    for elektrik in Elektrik_list:
-        elektrik.l = 1
-        elektrik.rect.x = 1400
+    for electric in Elektrik_list:
+        electric.l = 1
+        electric.rect.x = 1400
     Elektrik_list.clear()
 
 
+class achievement(GameSprite):
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
+        self.rect.x = -400
+        self.p = 0
+        self.orientation = "positive"
+
+    def show(self):
+        if self.rect.x != 0 and self.orientation == "positive":
+            self.rect.x += 20
+        else:
+            if self.orientation == "positive" and self.p == 300:
+                self.orientation = "negative"
+            elif self.orientation == "negative" and self.rect.x != -400:
+                self.rect.x -= 20
+
+
+# load essential files
 MS_DOS = font.Font("fnt/ModernDOS9x16.ttf", 100)
 MS_DOS_smol = font.Font("fnt/ModernDOS9x16.ttf", 25)
 
-def text(text, x, y):
+
+def text(txt, x, y):
     screen.fill((0, 0, 0))
     screen.blit(loading, (430, 0))
     screen.blit(tmtaw, (475, 720))
-    textSurface = MS_DOS_smol.render(text, True, (255, 255, 255))
-    screen.blit(textSurface, (x, y))
+    text_surface = MS_DOS_smol.render(txt, True, (255, 255, 255))
+    screen.blit(text_surface, (x, y))
     update_()
+
 
 lost = MS_DOS.render("YOU LOST.", True, (0, 0, 0), None)
 disclaimer = MS_DOS.render("DISCLAIMER!!!!", True, (255, 0, 0))
@@ -399,7 +418,6 @@ while not ext:
     clock.tick(fps)
     display.update()
 
-
 github = MS_DOS_smol.render('Press "G" to redirect to the repository.', True, (255, 255, 255))
 run = True
 while run:
@@ -418,6 +436,14 @@ while run:
     screen.blit(click, (455, 720))
     update_()
 
+# Load assets and variables
+
+death1 = False
+death10 = False
+death50 = False
+koin = False
+
+det_cnt = 0
 
 loading = MS_DOS.render("LOADING...", True, (255, 255, 255))
 tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 255, 255))
@@ -431,6 +457,31 @@ text("snd/Warning.mp3", 525, 360)
 warning = mixer.Sound("snd/Warning.mp3")
 text("snd/Launch.mp3", 525, 360)
 launch = mixer.Sound("snd/Launch.mp3")
+text("data/", 525, 360)
+
+basepath = os.getcwd()
+for entry in os.listdir(basepath):
+    if os.path.isdir(os.path.join(basepath, entry)):
+        if entry.find("data") != -1:
+            print("Found data folder: " + entry)
+        else:
+            try:
+                os.mkdir("data/")
+            except OSError:
+                pass
+
+for file in os.listdir(basepath + "/data"):
+    if os.path.isfile(os.path.join(basepath + "/data", file)):
+        if file.find("death1") != -1:
+            death1 = True
+        elif file.find("death10") != -1:
+            death10 = True
+        elif file.find("death50") != -1:
+            death50 = True
+        elif file.find("koin") != -1:
+            koin = True
+
+
 text("snd/Theme.mp3", 525, 360)
 theme = mixer.Sound("snd/Theme.mp3")
 text("snd/Explode.mp3", 525, 360)
@@ -441,6 +492,10 @@ Game = True
 m = 0
 a = 0
 
+text("ez = MS_DOS_smol.render", 525, 360)
+ez = MS_DOS_smol.render("You need help...", True, (255, 255, 255))
+text("ig = MS_DOS_smol.render", 525, 360)
+ig = MS_DOS_smol.render("I guess I have to increase the chances of the koin....", True, (255, 255, 255))
 text("help = MS_DOS_smol.render", 525, 360)
 help = MS_DOS_smol.render("You need help, don't you?", True, (255, 255, 255))
 text("lhelp = MS_DOS_smol.render", 525, 360)
@@ -477,6 +532,10 @@ text("pepe-gif.gif", 525, 360)
 pepo = GameSprite("pepe-gif.gif", 616, 384, 408, 384)
 text("img/pepo_shock.png", 525, 360)
 pepo_shock = GameSprite("img/pepo_shock.png", 0, 336, 440, 432)
+text("img/pepo_cry.png", 525, 360)
+pepo_cry = GameSprite("img/pepo_cry.png", 0, screen_height - 421, 500, 421)
+text("img/pepo_disappointed.png", 525, 360)
+pepo_disappointed = GameSprite("img/disappointed_pepo.png", 0, screen_height - 550, 550, 550)
 text("img/Missile_Target.png", 525, 360)
 missile = MissileTracer(target, 0, 0, 93, 34)
 text("img/Rocket1.png", 525, 360)
@@ -508,6 +567,7 @@ powerup = False
 times = 0
 stage = "run"
 diff = "normal"
+
 while Game:
     for e in event.get():
         if e.type == QUIT:
@@ -517,6 +577,30 @@ while Game:
             stage = "run"
         elif e.type == KEYDOWN and e.key == K_o:
             times = 9
+            det_cnt = 9
+        elif e.type == KEYDOWN and e.key == K_5:
+            times = 49
+            det_cnt = 49
+        elif e.type == KEYDOWN and e.key == K_p:
+            powerup = True
+
+    if det_cnt == 1:
+        try:
+            open("data/death1", "x")
+        except FileExistsError:
+            pass
+
+    elif det_cnt == 10:
+        try:
+            open("data/death10", "x")
+        except FileExistsError:
+            pass
+
+    elif det_cnt == 50:
+        try:
+            open("data/death50", "x")
+        except FileExistsError:
+            pass
 
     if stage == "run":
         if m == 0:
@@ -553,6 +637,10 @@ while Game:
             if sprite.collide_rect(barry, koin):
                 powerup = True
                 koin.l = 0
+                try:
+                    open("data/koin", "x")
+                except FileExistsError:
+                    pass
 
         elif koin.l == 0:
             koin.rect.x = 1366
@@ -568,9 +656,10 @@ while Game:
                     stage = "lost"
                     explode.play()
                     times += 1
+                    det_cnt += 1
                 if powerup and sprite.collide_rect(barry, missile):
                     powerup = False
-                    missiles.remove(missile)
+                    reset(barry.rect.x, barry.rect.y)
 
         for elektrik in Elektrik_list:
             if elektrik.l == 0:
@@ -580,9 +669,11 @@ while Game:
                     stage = "lost"
                     Elektric.play()
                     times += 1
+                    det_cnt += 1
                 if powerup and sprite.collide_rect(barry, elektrik):
                     powerup = False
                     Elektrik_list.remove(elektrik)
+                    reset(barry.rect.x, barry.rect.y)
 
         if diff == "normal":
             if lnch == 70 or lnch == 80 or lnch == 90:
@@ -633,7 +724,7 @@ while Game:
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     times = 13
             update_()
-            sleep(0.5)
+
         while times == 13:
             screen.fill((0, 0, 0))
             pepo_shock.reset()
@@ -645,12 +736,38 @@ while Game:
                     exit()
 
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
-                    print("click")
                     reset(20, 675)
                     times = 14
                 elif e.type == KEYDOWN and e.key == K_h:
                     diff = "less"
                     times = 14
+            update_()
+
+        while times == 50 or times == 51 or times == 52 or times == 53:
+            screen.fill((25, 25, 25))
+            pepo_cry.reset()
+            screen.blit(ez, (550, 0))
+            screen.blit(click, (455, 720))
+            for e in event.get():
+                if e.type == QUIT:
+                    exit()
+
+                elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+                    reset(20, 675)
+                    times = 54
+            update_()
+        while times == 54:
+            screen.fill((25, 25, 25))
+            pepo_disappointed.reset()
+            screen.blit(ig, (250, 0))
+            screen.blit(click, (455, 720))
+            for e in event.get():
+                if e.type == QUIT:
+                    exit()
+
+                elif e.type == MOUSEBUTTONDOWN and e.button == 1:
+                    reset(20, 675)
+                    times = 55
             update_()
         else:
             screen.fill((100, 0, 0))
