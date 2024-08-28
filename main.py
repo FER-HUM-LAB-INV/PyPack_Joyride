@@ -1,6 +1,8 @@
 from random import randint
 from pygame import *
+from time import sleep
 import os
+import shutil
 
 init()
 mixer.init()
@@ -369,16 +371,20 @@ class achievement(GameSprite):
         super().__init__(filename, x, y, w, h)
         self.rect.x = -400
         self.p = 0
+        self.o = 0
         self.orientation = "positive"
 
     def show(self):
         if self.rect.x != 0 and self.orientation == "positive":
-            self.rect.x += 20
+            print("mooving")
+            self.rect.x += 10
+
         else:
+            self.p += 1
             if self.orientation == "positive" and self.p == 300:
                 self.orientation = "negative"
             elif self.orientation == "negative" and self.rect.x != -400:
-                self.rect.x -= 20
+                self.rect.x -= 10
 
 
 # load essential files
@@ -401,6 +407,8 @@ recreation = MS_DOS_smol.render("THIS IS ONLY A RECREATION, NOT A STOLEN GAME!!!
 halfbrick = MS_DOS_smol.render("ALL RIGHTS RESERVED FOR HALFBRICK STUDIOS!!!", True, (255, 0, 0))
 click = MS_DOS_smol.render("PRESS ANYWHERE TO CONTINUE...", True, (255, 255, 255))
 ext = False
+fac = False
+notfac = False
 
 while not ext:
     for e in event.get():
@@ -419,6 +427,7 @@ while not ext:
     display.update()
 
 github = MS_DOS_smol.render('Press "G" to redirect to the repository.', True, (255, 255, 255))
+fact_res = MS_DOS_smol.render("if you want to do a factory reset, press 'F'.", True, (255, 255, 255))
 run = True
 while run:
     for e in event.get():
@@ -431,10 +440,37 @@ while run:
         elif e.type == MOUSEBUTTONDOWN and e.button == 1:
             run = False
 
+        elif e.type == KEYDOWN and e.key == K_f:
+            try:
+                shutil.rmtree('data/')
+                fac = True
+                run = False
+            except FileNotFoundError:
+                notfac = True
+                run = False
+
     screen.fill((0, 0, 0))
     screen.blit(github, (405, 0))
+    screen.blit(fact_res, (350, 350))
     screen.blit(click, (455, 720))
     update_()
+
+fact = MS_DOS.render("FACTORY RESET COMPLETED.", True, (0, 255, 255))
+notfact = MS_DOS.render("FACTORY RESET FAILED.", True, (200, 0, 0))
+
+if fac:
+    screen.fill((0, 0, 0))
+    screen.blit(fact, (40, 350))
+    update_()
+    sleep(3)
+    fac = False
+elif notfac:
+    screen.fill((0, 0, 0))
+    screen.blit(notfact, (150, 350))
+    update_()
+    sleep(3)
+    notfac = False
+
 
 # Load assets and variables
 
@@ -454,6 +490,7 @@ screen.blit(tmtaw, (475, 720))
 update_()
 
 text("snd/Warning.mp3", 525, 360)
+sleep(0.15)
 warning = mixer.Sound("snd/Warning.mp3")
 text("snd/Launch.mp3", 525, 360)
 launch = mixer.Sound("snd/Launch.mp3")
@@ -568,6 +605,13 @@ times = 0
 stage = "run"
 diff = "normal"
 
+text("img/1.bmp", 525, 360)
+deth1 = achievement("img/1.bmp", -400, 0, 400, 269)
+text("img/10.bmp", 525, 360)
+deth10 = achievement("img/10.bmp", -400, 0, 400, 269)
+text("img/50.bmp", 525, 360)
+deth50 = achievement("img/50.bmp", -400, 0, 400, 269)
+
 while Game:
     for e in event.get():
         if e.type == QUIT:
@@ -583,24 +627,6 @@ while Game:
             det_cnt = 49
         elif e.type == KEYDOWN and e.key == K_p:
             powerup = True
-
-    if det_cnt == 1:
-        try:
-            open("data/death1", "x")
-        except FileExistsError:
-            pass
-
-    elif det_cnt == 10:
-        try:
-            open("data/death10", "x")
-        except FileExistsError:
-            pass
-
-    elif det_cnt == 50:
-        try:
-            open("data/death50", "x")
-        except FileExistsError:
-            pass
 
     if stage == "run":
         if m == 0:
@@ -710,7 +736,6 @@ while Game:
     elif stage == "lost":
         print("Times: " + str(times))
         while times == 10 or times == 11 or times == 12:
-            screen.fill((0, 0, 0))
             pepo.reset()
             screen.blit(help, (500, 0))
             screen.blit(lhelp, (500, 150))
@@ -726,7 +751,6 @@ while Game:
             update_()
 
         while times == 13:
-            screen.fill((0, 0, 0))
             pepo_shock.reset()
             screen.blit(usure, (280, 0))
             screen.blit(usure2, (475, 200))
@@ -773,4 +797,38 @@ while Game:
             screen.fill((100, 0, 0))
             screen.blit(lost, (440, 330))
 
+    if det_cnt == 1 or det_cnt == 2 or det_cnt == 3:
+        try:
+            open("data/death1", "x")
+            deth1.o = 1
+        except FileExistsError:
+            pass
+
+    elif det_cnt == 10 or det_cnt == 11 or det_cnt == 12:
+        try:
+            open("data/death10", "x")
+            deth10.o = 1
+        except FileExistsError:
+            pass
+
+    elif det_cnt == 50 or det_cnt == 51 or det_cnt == 52:
+        try:
+            open("data/death50", "x")
+            deth50.o = 1
+        except FileExistsError:
+            pass
+
+    if deth1.o == 1:
+        deth1.reset()
+        deth1.show()
+
+    if deth10.o == 1:
+        deth10.reset()
+        deth10.show()
+
+    if deth50.o == 1:
+        deth50.reset()
+        deth50.show()
+
+    print("death count: " + str(det_cnt))
     update_()
