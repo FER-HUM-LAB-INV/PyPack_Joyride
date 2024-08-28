@@ -611,6 +611,8 @@ text("img/10.bmp", 525, 360)
 deth10 = achievement("img/10.bmp", -400, 0, 400, 269)
 text("img/50.bmp", 525, 360)
 deth50 = achievement("img/50.bmp", -400, 0, 400, 269)
+text("img/koin.bmp", 525, 360)
+pepo_koin = achievement("img/koin.bmp", -400, 0, 400, 269)
 
 while Game:
     for e in event.get():
@@ -665,6 +667,7 @@ while Game:
                 koin.l = 0
                 try:
                     open("data/koin", "x")
+                    koin.o = 1
                 except FileExistsError:
                     pass
 
@@ -753,6 +756,10 @@ while Game:
             if deth10.o == 1:
                 deth10.reset()
                 deth10.show()
+
+            if pepo_koin.o == 1:
+                pepo_koin.reset()
+                pepo_koin.show()
             update_()
 
         while times == 13:
@@ -775,6 +782,10 @@ while Game:
             if deth10.o == 1:
                 deth10.reset()
                 deth10.show()
+
+            if pepo_koin.o == 1:
+                pepo_koin.reset()
+                pepo_koin.show()
             update_()
 
         while times == 50 or times == 51 or times == 52 or times == 53:
@@ -793,6 +804,10 @@ while Game:
             if deth50.o == 1:
                 deth50.reset()
                 deth50.show()
+
+            if pepo_koin.o == 1:
+                pepo_koin.reset()
+                pepo_koin.show()
             update_()
         while times == 54:
             screen.fill((25, 25, 25))
@@ -810,6 +825,10 @@ while Game:
             if deth50.o == 1:
                 deth50.reset()
                 deth50.show()
+
+            if pepo_koin.o == 1:
+                pepo_koin.reset()
+                pepo_koin.show()
             update_()
         else:
             screen.fill((100, 0, 0))
@@ -850,6 +869,10 @@ while Game:
     if deth50.o == 1:
         deth50.reset()
         deth50.show()
+
+    if pepo_koin.o == 1:
+        pepo_koin.reset()
+        pepo_koin.show()
 
     print("death count: " + str(det_cnt))
     update_()
