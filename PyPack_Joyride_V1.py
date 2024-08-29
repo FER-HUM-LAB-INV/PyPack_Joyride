@@ -43,6 +43,7 @@ class Barry(GameSprite):
 
     def __init__(self, filename, x, y, w, h):
         super().__init__(filename, x, y, w, h)
+        self.t = 0
         self.fall = 0
         self.counter = 0
         self.kind = "run"
@@ -86,11 +87,13 @@ class Barry(GameSprite):
     def move(self):
         keys = key.get_pressed()
         if keys[K_SPACE]:
-            bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 10, 45)
-            bullets.append(bullet)
-
-            for bullet in bullets:
-                bullet.shoot()
+            self.t += 1
+            if self.t == 2:
+                bullet = Bullets("img/Bullet.png", self.rect.x, self.rect.y + self.h, 10, 45)
+                bullets.append(bullet)
+                self.t = 0
+                for bullet in bullets:
+                    bullet.shoot()
 
             self.kind = "fly"
             self.rect.y -= self.fall
@@ -301,9 +304,17 @@ class MissileTracer(GameSprite):
 
 class Bullets(GameSprite):
 
+    def __init__(self, filename, x, y, w, h):
+        super().__init__(filename, x, y, w, h)
+        self.x = True
+
     def shoot(self):
         j = randint(-15, 10)
-        self.rect.x = barry.rect.x + 23.5 + j
+        if self.x:
+            self.rect.x = barry.rect.x + 23.5 + j
+            self.x = False
+        else:
+            self.rect.x -= 3
 
 
 class Elektrik(GameSprite):
