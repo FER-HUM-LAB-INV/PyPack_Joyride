@@ -481,6 +481,8 @@ koin = False
 
 det_cnt = 0
 
+ez_koin = False
+
 loading = MS_DOS.render("LOADING...", True, (255, 255, 255))
 tmtaw = MS_DOS_smol.render("THIS MIGHT TAKE A WHILE...", True, (255, 255, 255))
 
@@ -654,7 +656,10 @@ while Game:
             bullet.reset()
             bullet.rect.y += 25
 
-        koin_rand = randint(1, 1000)
+        if ez_koin:
+            koin_rand = (1, 350)
+        else:
+            koin_rand = randint(1, 1000)
 
         if koin_rand == 500 and not powerup:
             koin.l = 1
@@ -668,6 +673,7 @@ while Game:
                 try:
                     open("data/koin", "x")
                     pepo_koin.o = 1
+                    ez_koin = True
                 except FileExistsError:
                     pass
 
