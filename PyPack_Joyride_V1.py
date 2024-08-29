@@ -93,7 +93,6 @@ class Barry(GameSprite):
                 bullet.shoot()
 
             self.kind = "fly"
-            print(self.fall)
             self.rect.y -= self.fall
             self.fall += 0.75
             if sprite.collide_rect(self, floor):
