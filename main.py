@@ -14,7 +14,7 @@ fps = 60
 screen_width = 1366
 screen_height = 768
 
-screen = display.set_mode((screen_width, screen_height), FULLSCREEN)
+screen = display.set_mode((screen_width, screen_height))
 display.set_caption("PyPack Joyride")
 
 
@@ -620,6 +620,12 @@ deth50 = achievement("img/50.bmp", -400, 0, 400, 269)
 text("img/koin.bmp", 525, 360)
 pepo_koin = achievement("img/koin.bmp", -400, 0, 400, 269)
 
+warning.set_volume(0.1)
+launch.set_volume(0.1)
+theme.set_volume(0.1)
+explode.set_volume(0.1)
+Elektric.set_volume(0.1)
+
 while Game:
     for e in event.get():
         if e.type == QUIT:
@@ -638,11 +644,11 @@ while Game:
         elif e.type == KEYDOWN and e.key == K_ESCAPE:
             stage = "pause"
         elif stage == "pause" and e.type == MOUSEBUTTONDOWN and e.button == 1:
-            warning.set_volume(100)
-            launch.set_volume(100)
-            theme.set_volume(100)
-            explode.set_volume(100)
-            Elektric.set_volume(100)
+            warning.set_volume(0.5)
+            launch.set_volume(0.5)
+            theme.set_volume(0.5)
+            explode.set_volume(0.5)
+            Elektric.set_volume(0.5)
             stage = "run"
 
     if stage == "run":
