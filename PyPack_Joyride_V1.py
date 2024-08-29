@@ -334,13 +334,12 @@ class Koin(GameSprite):
     def __init__(self, filename, x, y, w, h):
         super().__init__(filename, x, y, w, h)
         self.fall = 0
-        self.image = image.load("img/Koin.png")
         self.orientation = "positive"
         self.l = 0
 
-    def float(self):
+    def float(self, speed):
         self.rect.y -= self.fall
-        self.rect.x -= 16
+        self.rect.x -= speed
         if self.fall >= 13:
             self.orientation = "negative"
         elif self.fall <= -13:
@@ -578,6 +577,8 @@ text('img/Missile_target.png', 525, 360)
 target = 'img/Missile_Target.png'
 text("img/Koin.png", 525, 360)
 koin = Koin("img/Koin.png", screen_width, 470, 80, 80)
+text("img/booster.png", 525, 360)
+booster = Koin("img/booster.png", screen_width, 470, 110, 110)
 text("img/Floor.png", 525, 360)
 floor = GameSprite("img/floor.png", 0, 718, screen_width, 50)
 text("img/Roof.png", 525, 360)
@@ -688,15 +689,17 @@ while Game:
 
         if ez_koin:
             koin_rand = (1, 500)
+            booster_rand = (1, 1500)
         else:
             koin_rand = randint(1, 1000)
+            booster_rand = randint(1, 3000)
 
         if koin_rand == 500 and not powerup:
             koin.l = 1
 
         if koin.l == 1:
             koin.reset()
-            koin.float()
+            koin.float(10)
             if sprite.collide_rect(barry, koin):
                 powerup = True
                 koin.l = 0
@@ -711,6 +714,19 @@ while Game:
             koin.rect.x = 1366
             koin.rect.y = 460
             koin.fall = 0
+
+        if booster_rand == 1500 and not powerup:
+            booster.reset()
+            booster.float(20)
+            if sprite.collide_rect(barry, booster):
+                powerup = True
+                booster.l = 0
+                try:
+                    open("data/booster", "x")
+                    pepo_koin.o = 1
+                    ez_koin = True
+                except FileExistsError:
+                    pass
 
         lnch = randint(1, 225)
         if missile.l == 0:
@@ -769,8 +785,13 @@ while Game:
                 for missile in missiles:
                     missile.l = 0
 
+        for bullet in bullets:
+            if sprite.collide_rect(bullet, floor):
+                bullets.remove(bullet)
+
         explosion.reset()
         explosion.explode()
+
 
     elif stage == "lost":
         while times == 10 or times == 11 or times == 12:
