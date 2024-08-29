@@ -104,11 +104,11 @@ class Barry(GameSprite):
         elif self.fall <= -20:
             self.fall = -20
 
-        if sprite.collide_rect(barry, roof):
-            barry.fall = 0
+        if sprite.collide_rect(self, roof):
+            self.rect.y = 41
+            self.fall = 0
 
         if not keys[K_SPACE]:
-            print(self.fall)
             self.fall -= 0.75
             self.rect.y -= self.fall
             if sprite.collide_rect(self, floor):
@@ -117,6 +117,8 @@ class Barry(GameSprite):
                 self.kind = "run"
             elif not sprite.collide_rect(self, floor):
                 self.kind = "fall"
+            if sprite.collide_rect(self, roof):
+                self.rect.y = 41
 
 
 class Explosion(GameSprite):
@@ -547,6 +549,8 @@ text("usure2 = MS_DOS_smol.render", 525, 360)
 usure2 = MS_DOS_smol.render("If you click, you will continue.", True, (150, 0, 0))
 text("usure3 = MS_DOS_smol.render", 525, 360)
 usure3 = MS_DOS_smol.render('If you tap "h", then you will continue easily.', True, (150, 0, 0))
+text("pause = MS_DOS.render", 525, 360)
+pause = MS_DOS.render("PAUSED", True, (255, 255, 255))
 
 text("img/Fly1.png", 525, 360)
 text("img/Fly2.png", 525, 360)
@@ -631,6 +635,15 @@ while Game:
             det_cnt = 49
         elif e.type == KEYDOWN and e.key == K_p:
             powerup = True
+        elif e.type == KEYDOWN and e.key == K_ESCAPE:
+            stage = "pause"
+        elif stage == "pause" and e.type == MOUSEBUTTONDOWN and e.button == 1:
+            warning.set_volume(100)
+            launch.set_volume(100)
+            theme.set_volume(100)
+            explode.set_volume(100)
+            Elektric.set_volume(100)
+            stage = "run"
 
     if stage == "run":
         if m == 0:
@@ -743,7 +756,6 @@ while Game:
         explosion.explode()
 
     elif stage == "lost":
-        print("Times: " + str(times))
         while times == 10 or times == 11 or times == 12:
             screen.fill((25, 25, 25))
             pepo.reset()
@@ -840,6 +852,20 @@ while Game:
             screen.fill((100, 0, 0))
             screen.blit(lost, (440, 330))
 
+    elif stage == "pause":
+        screen.fill((0, 0, 0))
+        screen.blit(pause, (425, 330))
+        screen.blit(click, (455, 720))
+        warning.set_volume(0)
+        launch.set_volume(0)
+        theme.set_volume(0)
+        explode.set_volume(0)
+        Elektric.set_volume(0)
+        for e in event.get():
+            if e.type == QUIT:
+                exit()
+        update_()
+
     if det_cnt == 1 or det_cnt == 2 or det_cnt == 3:
         try:
             open("data/death1", "x")
@@ -879,6 +905,4 @@ while Game:
     if pepo_koin.o == 1:
         pepo_koin.reset()
         pepo_koin.show()
-
-    print("death count: " + str(det_cnt))
     update_()
