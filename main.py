@@ -344,6 +344,7 @@ class Koin(GameSprite):
 
         if self.rect.x <= -150:
             self.l = 0
+            self.rect.x = screen_width
 
 
 def reset(x, y):
@@ -566,7 +567,7 @@ barry = Barry("img/Walk1.png", 20, 675, 64, 74)
 text('img/Missile_target.png', 525, 360)
 target = 'img/Missile_Target.png'
 text("img/Koin.png", 525, 360)
-koin = Koin("img/Koin.png", 1366, 470, 80, 80)
+koin = Koin("img/Koin.png", screen_width, 470, 80, 80)
 text("img/Floor.png", 525, 360)
 floor = GameSprite("img/floor.png", 0, 718, screen_width, 50)
 text("img/Roof.png", 525, 360)
@@ -676,7 +677,7 @@ while Game:
             bullet.rect.y += 25
 
         if ez_koin:
-            koin_rand = (1, 350)
+            koin_rand = (1, 500)
         else:
             koin_rand = randint(1, 1000)
 
@@ -813,7 +814,7 @@ while Game:
             update_()
 
         while times == 50 or times == 51 or times == 52 or times == 53:
-            screen.fill((25, 25, 25))
+            screen.fill((0, 0, 0))
             pepo_cry.reset()
             screen.blit(ez, (550, 0))
             screen.blit(click, (455, 720))
@@ -845,6 +846,7 @@ while Game:
                 elif e.type == MOUSEBUTTONDOWN and e.button == 1:
                     reset(20, 675)
                     times = 55
+                    ez_koin = True
 
             if deth50.o == 1:
                 deth50.reset()
