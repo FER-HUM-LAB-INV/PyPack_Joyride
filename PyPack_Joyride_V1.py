@@ -662,6 +662,8 @@ while Game:
             explode.set_volume(0.5)
             Elektric.set_volume(0.5)
             stage = "run"
+        elif e.type == KEYDOWN and e.key == K_r:
+            booster.l = 1
 
     if stage == "run":
         if m == 0:
@@ -692,7 +694,7 @@ while Game:
             booster_rand = (1, 1500)
         else:
             koin_rand = randint(1, 1000)
-            booster_rand = randint(1, 3000)
+            booster_rand = randint(1, 1500 )
 
         if koin_rand == 500 and not powerup:
             koin.l = 1
@@ -715,7 +717,7 @@ while Game:
             koin.rect.y = 460
             koin.fall = 0
 
-        if booster_rand == 1500 and not powerup:
+        if booster.l == 1:
             booster.reset()
             booster.float(20)
             if sprite.collide_rect(barry, booster):
@@ -727,6 +729,9 @@ while Game:
                     ez_koin = True
                 except FileExistsError:
                     pass
+
+        if booster_rand == 1500:
+            booster.l = 1
 
         lnch = randint(1, 225)
         if missile.l == 0:
